@@ -1,10 +1,10 @@
-// server/server.js
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
 const lenderRoutes = require('./routes/lender');
 const borrowerRoutes = require('./routes/borrower');
+const invoiceRoutes = require('./routes/Invoice'); 
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -28,6 +28,9 @@ app.use('/api/lender', lenderRoutes);
 
 // Borrower route
 app.use('/api/borrower', borrowerRoutes);
+
+// Invoice route
+app.use('/api/invoice', invoiceRoutes); // Use invoice routes
 
 // Start server
 app.listen(PORT, () => {
