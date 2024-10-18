@@ -4,7 +4,7 @@ const z = require("zod");
 const addInvestsSchema = z.object({
     amount: z.number(),
     tenure: z.number(),
-    monthlyEarnings: z.string(),
+    monthlyEarnings: z.string(), 
     lenderID: z.string()
 });
 
