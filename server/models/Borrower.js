@@ -17,3 +17,7 @@ const borrowerSchema = new mongoose.Schema({
 
 module.exports = mongoose.model('Borrower', borrowerSchema);
 
+
+
+
+
