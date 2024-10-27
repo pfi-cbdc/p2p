@@ -13,8 +13,14 @@ const Navbar = () => {
             navigate('/'); // Redirect to homepage after logout
         } catch (error) {
             console.error('Logout error:', error);
+            if (error.response && error.response.status === 400) {
+                // Clear local storage if session is invalid
+                localStorage.removeItem('firstName');
+                navigate('/login');
+            }
         }
     };
+    
 
     // Check if user is logged in by checking local storage
     const isLoggedIn = localStorage.getItem('firstName') !== null;
@@ -45,3 +51,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
