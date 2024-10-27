@@ -42,8 +42,8 @@ exports.registerUser = async (req, res) => {
     req.session.tempUser = tempUser;
 
     // Send OTP email
-    // await sendOtpToEmail(email, otp);
-    console.log(otp);
+    await sendOtpToEmail(email, otp);
+    // console.log(otp);
 
     res.status(200).json({ message: "OTP sent to your email. Please verify." });
   } catch (error) {

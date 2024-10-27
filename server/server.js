@@ -55,7 +55,7 @@ const upload = multer({ storage });
 
 // MongoDB connection
 mongoose
-  .connect("mongodb://localhost:27017/invoice_mng")
+  .connect(process.env.MONGODB_URI)
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error(err));
 
