@@ -30,20 +30,12 @@ const Registration = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await api.post("/register", {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        phone: formData.phone,
-        email: formData.email,
-        password: formData.password,
-      });
-      // Store the user's first name in localStorage
+      const response = await api.post("/register", formData);
       localStorage.setItem('firstName', formData.firstName);
       setMessage(response.data.message);
       
-      // Send verification email
       await api.post("/send-otp", { email: formData.email });
-      setOtpSent(true); // Indicate that the OTP has been sent
+      setOtpSent(true);
     } catch (error) {
       setMessage(error.response?.data?.message || "Error during registration");
     }
@@ -55,7 +47,6 @@ const Registration = () => {
       const response = await api.post("/verify-otp", { otp });
       setMessage(response.data.message);
       if (response.status === 200) {
-        // Redirect to the role page after successful verification
         window.location.href = "/role";
       }
     } catch (error) {
@@ -64,74 +55,91 @@ const Registration = () => {
   };
 
   return (
-    <div>
-      <h2>Register</h2>
-      {message && <p>{message}</p>}
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="w-full max-w-md p-8 space-y-6 bg-white shadow-lg rounded-lg">
+        <h2 className="text-2xl font-bold text-center text-gray-800">Register</h2>
+        
+        {message && <p className="text-center text-red-500">{message}</p>}
 
-      {!otpSent ? (
-        <form onSubmit={handleRegister}>
-          <input
-            type="text"
-            name="firstName"
-            placeholder="First Name"
-            value={formData.firstName}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="text"
-            name="lastName"
-            placeholder="Last Name"
-            value={formData.lastName}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="text"
-            name="phone"
-            placeholder="Phone"
-            value={formData.phone}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-          <button type="submit">Send OTP</button>
-        </form>
-      ) : (
-        <form onSubmit={handleVerifyOtp}>
-          <input
-            type="text"
-            name="otp"
-            placeholder="Enter OTP"
-            value={otp}
-            onChange={handleOtpChange}
-            required
-          />
-          <button type="submit">Verify OTP</button>
-        </form>
-      )}
+        {!otpSent ? (
+          <form onSubmit={handleRegister} className="space-y-4">
+            <input
+              type="text"
+              name="firstName"
+              placeholder="First Name"
+              value={formData.firstName}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+              required
+            />
+            <input
+              type="text"
+              name="lastName"
+              placeholder="Last Name"
+              value={formData.lastName}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+              required
+            />
+            <input
+              type="text"
+              name="phone"
+              placeholder="Phone"
+              value={formData.phone}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+              required
+            />
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+              required
+            />
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+              required
+            />
+            <button
+              type="submit"
+              className="w-full px-4 py-2 font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none"
+            >
+              Send OTP
+            </button>
+          </form>
+        ) : (
+          <form onSubmit={handleVerifyOtp} className="space-y-4">
+            <input
+              type="text"
+              name="otp"
+              placeholder="Enter OTP"
+              value={otp}
+              onChange={handleOtpChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+              required
+            />
+            <button
+              type="submit"
+              className="w-full px-4 py-2 font-semibold text-white bg-green-500 rounded hover:bg-green-600 focus:outline-none"
+            >
+              Verify OTP
+            </button>
+          </form>
+        )}
 
-      {/* Link to Login Page */}
-      <p>
-            Already have an account? 
-            <a href="/login" className="text-blue-500 hover:underline"> Login here</a>
+        <p className="text-center text-gray-600">
+          Already have an account? 
+          <a href="/login" className="text-blue-500 hover:underline"> Login here</a>
         </p>
-
+      </div>
     </div>
   );
 };
