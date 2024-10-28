@@ -30,7 +30,6 @@ const Registration = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      // Ensure you're using the correct URL
       const response = await api.post("/register", {
         firstName: formData.firstName,
         lastName: formData.lastName,
@@ -38,8 +37,13 @@ const Registration = () => {
         email: formData.email,
         password: formData.password,
       });
-      setOtpSent(true);
+      // Store the user's first name in localStorage
+      localStorage.setItem('firstName', formData.firstName);
       setMessage(response.data.message);
+      
+      // Send verification email
+      await api.post("/send-otp", { email: formData.email });
+      setOtpSent(true); // Indicate that the OTP has been sent
     } catch (error) {
       setMessage(error.response?.data?.message || "Error during registration");
     }
@@ -48,13 +52,11 @@ const Registration = () => {
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
     try {
-      // Ensure you're using the correct URL
-      const response = await api.post("/verify-otp", {
-        otp,
-      });
+      const response = await api.post("/verify-otp", { otp });
       setMessage(response.data.message);
       if (response.status === 200) {
-        window.location.href = "/login";
+        // Redirect to the role page after successful verification
+        window.location.href = "/role";
       }
     } catch (error) {
       setMessage(error.response?.data?.message || "Error verifying OTP");
@@ -123,6 +125,13 @@ const Registration = () => {
           <button type="submit">Verify OTP</button>
         </form>
       )}
+
+      {/* Link to Login Page */}
+      <p>
+            Already have an account? 
+            <a href="/login" className="text-blue-500 hover:underline"> Login here</a>
+        </p>
+
     </div>
   );
 };
