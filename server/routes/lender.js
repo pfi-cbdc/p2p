@@ -22,4 +22,19 @@ router.post('/', async (req, res) => {
 // router.post('/newInv', authMiddleware, addInvestments);
 router.post('/newInv', addInvestments);
 
+// Add this new route to check lender status
+router.get('/status', async (req, res) => {
+    const { email } = req.query;
+    try {
+        const lender = await Lender.findOne({ email });
+        if (lender) {
+            return res.status(200).json({ exists: true });
+        }
+        return res.status(200).json({ exists: false });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Error checking lender status', error: error.message });
+    }
+});
+
 module.exports = router;

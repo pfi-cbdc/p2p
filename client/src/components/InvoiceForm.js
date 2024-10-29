@@ -48,10 +48,10 @@ const InvoiceForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="w-full max-w-lg p-8 space-y-6 bg-white shadow-md rounded-lg">
       <FileUpload onFileSelect={handleFileSelect} /> {/* File upload component */}
       
-      <select name="typeOfBusiness" onChange={handleChange} required>
+      <select name="typeOfBusiness" onChange={handleChange} required className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500">
         <option value="Select">Select</option>
         <option value="Sole Proprietorship">Sole Proprietorship</option>
         <option value="Partnership">Partnership</option>
@@ -59,10 +59,10 @@ const InvoiceForm = () => {
         <option value="Public Limited">Public Limited</option>
       </select>
 
-      <input type="number" name="tenureOfInvoice" placeholder="Tenure of Invoice" onChange={handleChange} required />
-      <input type="number" name="interestRate" placeholder="Interest Rate" onChange={handleChange} required />
+      <input type="number" name="tenureOfInvoice" placeholder="Tenure of Invoice" onChange={handleChange} required className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500" />
+      <input type="number" name="interestRate" placeholder="Interest Rate" onChange={handleChange} required className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500" />
       
-      <button type="submit">Submit</button>
+      <button type="submit" className="w-full px-4 py-2 mt-4 font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none">Submit</button>
     </form>
   );
 };

@@ -7,5 +7,4 @@ const invoiceSchema = new mongoose.Schema({
     interestRate: { type: Number }
 });
 
-// Change the model name from 'Fields' to 'Invoice'
 module.exports = mongoose.model('Invoice', invoiceSchema);

@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+const api = axios.create({
+  baseURL: "http://localhost:5001/api/auth",
+  withCredentials: true,
+});
+
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -13,74 +18,68 @@ const Login = () => {
         setErrorMessage('');
 
         try {
-            const response = await axios.post('http://localhost:5001/api/auth/login', {
-                email,
-                password,
-            }, { withCredentials: true });
-
-            console.log('Login response:', response.data);
+            const response = await api.post('/login', { email, password });
+            localStorage.setItem('email', email);
+            localStorage.setItem('firstName', response.data.firstName);
 
             if (response.data.redirect) {
-                console.log('Redirecting to:', response.data.redirect);
-                localStorage.setItem('firstName', response.data.firstName);
-                localStorage.setItem('email', email);
-                const userCheckResponse = await axios.get(`http://localhost:5001/api/auth/check-user/${email}`);
-                console.log('User check response:', userCheckResponse.data);
-
+                const userCheckResponse = await api.get(`/check-user/${email}`);
                 if (userCheckResponse.data.isLender) {
-                    console.log('Navigating to lender dashboard');
                     navigate('/lender-dashboard');
                 } else if (userCheckResponse.data.isBorrower) {
-                    console.log('Navigating to borrower dashboard');
                     navigate('/borrower-dashboard');
                 } else {
-                    console.log('Navigating to role selection');
                     navigate('/role');
                 }
             }
         } catch (error) {
-            if (error.response) {
-                setErrorMessage(error.response.data.message || 'An error occurred');
-            } else {
-                setErrorMessage('Network error. Please try again.');
-            }
+            setErrorMessage(error.response?.data?.message || 'Error during login');
         }
     };
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen">
-            <h2 className="text-2xl font-bold mb-4">Login</h2>
-            <form onSubmit={handleSubmit} className="w-full max-w-sm">
-                <div className="mb-4">
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-                    <input
-                        type="email"
-                        id="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="mt-1 p-2 border border-gray-300 rounded-md w-full"
-                        required
-                    />
-                </div>
-                <div className="mb-4">
-                    <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
-                    <input
-                        type="password"
-                        id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="mt-1 p-2 border border-gray-300 rounded-md w-full"
-                        required
-                    />
-                </div>
-                {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-                <button
-                    type="submit"
-                    className="w-full px-4 py-2 font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none"
-                >
-                    Log In
-                </button>
-            </form>
+        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+            <div className="w-full max-w-md p-8 space-y-6 bg-white shadow-lg rounded-lg">
+                <h2 className="text-2xl font-bold text-center text-gray-800">Login</h2>
+
+                {errorMessage && <p className="text-center text-red-500">{errorMessage}</p>}
+
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                        <label htmlFor="email" className="block text-lg font-medium text-gray-700">Email</label>
+                        <input
+                            type="email"
+                            id="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="password" className="block text-lg font-medium text-gray-700">Password</label>
+                        <input
+                            type="password"
+                            id="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                            required
+                        />
+                    </div>
+                    <button
+                        type="submit"
+                        className="w-full px-4 py-2 font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none"
+                    >
+                        Log In
+                    </button>
+                </form>
+
+                <p className="text-center text-gray-600">
+                    Don’t have an account? 
+                    <a href="/register" className="text-blue-500 hover:underline"> Register here</a>
+                </p>
+            </div>
         </div>
     );
 };
