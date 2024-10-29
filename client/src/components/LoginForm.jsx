@@ -1,31 +1,42 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Use useNavigate for routing
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const navigate = useNavigate(); // Initialize useNavigate
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setErrorMessage(''); // Clear previous error messages
+        setErrorMessage('');
 
         try {
             const response = await axios.post('http://localhost:5001/api/auth/login', {
                 email,
                 password,
-            }, { withCredentials: true }); // Include withCredentials to send cookies
+            }, { withCredentials: true });
 
-            // Ensure the response includes the user's first name
-            if (response.data.user && response.data.user.firstName) {
-                // Store the user's first name in localStorage
-                localStorage.setItem('firstName', response.data.user.firstName);
-                alert(response.data.message);
-                navigate('/role'); // Redirect to the role page after login
-            } else {
-                setErrorMessage('Login successful, but user information is not available.');
+            console.log('Login response:', response.data);
+
+            if (response.data.redirect) {
+                console.log('Redirecting to:', response.data.redirect);
+                localStorage.setItem('firstName', response.data.firstName);
+                localStorage.setItem('email', email);
+                const userCheckResponse = await axios.get(`http://localhost:5001/api/auth/check-user/${email}`);
+                console.log('User check response:', userCheckResponse.data);
+
+                if (userCheckResponse.data.isLender) {
+                    console.log('Navigating to lender dashboard');
+                    navigate('/lender-dashboard');
+                } else if (userCheckResponse.data.isBorrower) {
+                    console.log('Navigating to borrower dashboard');
+                    navigate('/borrower-dashboard');
+                } else {
+                    console.log('Navigating to role selection');
+                    navigate('/role');
+                }
             }
         } catch (error) {
             if (error.response) {
@@ -65,9 +76,9 @@ const Login = () => {
                 {errorMessage && <p className="text-red-500">{errorMessage}</p>}
                 <button
                     type="submit"
-                    className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
+                    className="w-full px-4 py-2 font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none"
                 >
-                    Login
+                    Log In
                 </button>
             </form>
         </div>

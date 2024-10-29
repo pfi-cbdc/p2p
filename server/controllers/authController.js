@@ -2,6 +2,8 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const { generateOtp } = require("../utils/otpGenerator");
 const { sendOtpToEmail } = require("../utils/emailService");
+const Lender = require('../models/Lender');
+const Borrower = require('../models/Borrower');
 
 const OTP_EXPIRE_TIME = 300000; // 5 minutes
 
@@ -103,7 +105,6 @@ exports.verifyOtp = async (req, res) => {
 };
 
 // Login User
-// Login User
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
 
@@ -124,13 +125,33 @@ exports.loginUser = async (req, res) => {
       email: user.email,
     };
 
-    // Send back the user information along with the message
+    // Check if the user is a lender
+    const lender = await Lender.findOne({ email: user.email });
+    if (lender) {
+      // If the lender exists, redirect to the lender dashboard
+      return res.status(200).json({
+        message: "Logged in successfully",
+        redirect: "/lender-dashboard",
+        firstName: user.firstName,
+      });
+    }
+
+    // Check if the user is a borrower
+    const borrower = await Borrower.findOne({ email: user.email });
+    if (borrower) {
+      // If the borrower exists, redirect to the borrower dashboard
+      return res.status(200).json({
+        message: "Logged in successfully",
+        redirect: "/borrower-dashboard",
+        firstName: user.firstName,
+      });
+    }
+
+    // Redirect to role selection if not a lender or borrower
     res.status(200).json({
       message: "Logged in successfully",
-      user: {
-        firstName: user.firstName, // Include first name
-        email: user.email, // Include email if necessary
-      },
+      redirect: "/role",
+      firstName: user.firstName,
     });
   } catch (error) {
     console.error("Error logging in:", error.message);

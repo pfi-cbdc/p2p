@@ -7,7 +7,7 @@ const BorrowerDashboard = () => {
 
     return (
         <div>
-            <div className='bg-black text-white text-center'>Welcome to user dashboard</div>
+            <div className='bg-black text-white text-center'>Welcome to borrower dashboard</div>
             
             <div className='flex flex-row'>
                 {/* ye menu bar hai*/}

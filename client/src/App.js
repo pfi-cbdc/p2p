@@ -26,7 +26,7 @@ function App() {
             path="/lender" 
             element={
               <ProtectedRoute>
-                <LenderForm />
+                <LenderForm email={localStorage.getItem('email')} />
               </ProtectedRoute>
             } 
           />

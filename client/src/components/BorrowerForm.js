@@ -5,17 +5,14 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const BorrowerForm = () => {
     const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        email: '',
-        phoneNumber: '',
-        password: '',
+        aadharCard: '',
         panCard: '',
+        gender: '',
         dateOfBirth: '',
-        employmentStatus: '',
-        loanAmount: '',
-        loanPurpose: '',
-        annualIncome: ''
+        accountStatement: '',
+        gstNumber: '',
+        typeOfBusiness: '',
+        email: localStorage.getItem('email') || ''
     });
 
     const navigate = useNavigate(); // Initialize useNavigate
@@ -27,29 +24,43 @@ const BorrowerForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log('Form Data:', formData); // Log the form data
         try {
             const response = await axios.post('http://localhost:5001/api/borrower', formData);
             console.log(response.data);
             navigate('/borrower-dashboard'); // Navigate to Borrower Dashboard
         } catch (error) {
-            console.error(error);
-            // Handle error (e.g., show an error message)
+            if (error.response) {
+                console.error('Error response:', error.response.data); // Log the error response
+                alert(`Error: ${error.response.data.message || 'An error occurred'}`); // Show an alert with the error message
+            } else {
+                console.error('Error:', error);
+                alert('Network error. Please try again.');
+            }
         }
     };
 
     return (
         <form onSubmit={handleSubmit}>
-            <input type="text" name="fileUpload" placeholder="Upload the file" onChange={handleChange} required />
-            <input type="radio" name="lastName" placeholder="Last Name" onChange={handleChange} required />
-            <input type="email" name="email" placeholder="Email" onChange={handleChange} required />
-            <input type="tel" name="phoneNumber" placeholder="Phone Number" onChange={handleChange} required />
-            <input type="password" name="password" placeholder="Password" onChange={handleChange} required />
-            <input type="text" name="panCard" placeholder="PAN Card" onChange={handleChange} />
+            <input type="text" name="aadharCard" placeholder="Aadhar Card" onChange={handleChange} required />
+            <input type="text" name="panCard" placeholder="PAN Card" onChange={handleChange} required />
+            <select name="gender" onChange={handleChange} required>
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select>
             <input type="date" name="dateOfBirth" onChange={handleChange} required />
-            <input type="text" name="employmentStatus" placeholder="Employment Status" onChange={handleChange} required />
-            <input type="number" name="loanAmount" placeholder="Loan Amount" onChange={handleChange} required />
-            <input type="text" name="loanPurpose" placeholder="Loan Purpose" onChange={handleChange} required />
-            <input type="number" name="annualIncome" placeholder="Annual Income" onChange={handleChange} required />
+            <input type="text" name="accountStatement" placeholder="Account Statement" onChange={handleChange} required />
+            <input type="text" name="gstNumber" placeholder="GST Number" onChange={handleChange} required />
+            <select name="typeOfBusiness" onChange={handleChange} required>
+                <option value="">Select Type of Business</option>
+                <option value="test1">Test 1</option>
+                <option value="test2">Test 2</option>
+                <option value="test3">Test 3</option>
+                <option value="test4">Test 4</option>
+                <option value="test5">Test 5</option>
+            </select>
             <button type="submit">Submit</button>
         </form>
     );

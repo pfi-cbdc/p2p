@@ -11,7 +11,10 @@ router.post('/', async (req, res) => {
         await newLender.save();
         res.status(201).json({ message: 'Lender created successfully', lender: newLender });
     } catch (error) {
-        res.status(400).json({ message: 'Error creating lender', error });
+        // Log the error for debugging
+        console.error(error);
+        // Return specific error messages
+        res.status(400).json({ message: 'Error creating lender', error: error.message });
     }
 });
 
@@ -20,4 +23,3 @@ router.post('/', async (req, res) => {
 router.post('/newInv', addInvestments);
 
 module.exports = router;
-
