@@ -5,12 +5,14 @@ const cors = require("cors");
 const multer = require("multer");
 const path = require("path");
 const bodyParser = require("body-parser");
+const setRateLimit = require('express-rate-limit')
 require("dotenv").config();
 
 const lenderRoutes = require("./routes/lender");
 const borrowerRoutes = require("./routes/borrower");
 const invoiceRoutes = require("./routes/invoice");
 const authRoutes = require("./routes/authRoutes");
+const adminRoutes = require('./routes/adminRoute');
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -40,6 +42,14 @@ app.use(
     },
   })
 );
+
+// Configure express-rate-limiter
+const rateLimitMiddleware = setRateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 10,
+  message: "You have exceeded your requests per minute limit",
+  headers: true
+});
 
 // Configure Multer to store files in the 'uploads' folder
 const storage = multer.diskStorage({
@@ -74,6 +84,9 @@ app.use("/api/lender", lenderRoutes);
 
 // Borrower route
 app.use("/api/borrower", borrowerRoutes);
+
+// Admin Route
+app.use('/api/admin', rateLimitMiddleware,  adminRoutes);
 
 // Invoice route
 app.use("/api/invoice", invoiceRoutes);

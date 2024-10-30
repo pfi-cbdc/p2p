@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './components/Home'; // Import Home component
 import LenderForm from './components/LenderForm';
@@ -11,12 +11,18 @@ import Login from './components/LoginForm.jsx';
 import RoleSelector from './components/RoleSelector.js' // Import Login component
 import ProtectedRoute from './components/ProtectedRoute'; // Import ProtectedRoute
 import './App.css';
+import AdminLogin from './components/Admin.js';
+import AdminDashboard from './components/AdminDashboard.jsx';
+import AdminProtectedRoute from './components/AdminProtectedRoute.js';
 
-function App() {
+function Root() {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith('/admin-pfi-2406');
+
   return (
-    <Router>
-      <div className="App">
-        <Navbar />
+    <div className="App">
+        {!isAdminRoute && <Navbar />}
+        {/* <Navbar /> */}
         <Routes>
           <Route path="/" element={<Home />} /> 
           <Route path="/role" element={<RoleSelector />} />
@@ -54,8 +60,24 @@ function App() {
               </ProtectedRoute>
             } 
           />
+          <Route path='/admin-pfi-2406' element={<AdminLogin />} />
+          <Route 
+            path='/admin-pfi-2406/dashboard' 
+            element={
+              <AdminProtectedRoute>
+                <AdminDashboard />
+              </AdminProtectedRoute>
+            } 
+          />
         </Routes>
       </div>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <Root />
     </Router>
   );
 }
