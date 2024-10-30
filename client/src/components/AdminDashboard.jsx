@@ -9,8 +9,12 @@ const AdminDashboard = () => {
     useEffect(() => {
         const fetchDetails = async () => {
             try {
-                const res = await axios.get('http://localhost:5001/api/admin/dashboard');
-                setResponse(res.data);
+                const res = await axios.post('http://localhost:5001/api/admin/dashboard', {}, {withCredentials: true});
+                if(res.status !== 200) {
+                    console.error("Error: ", res.status);
+                } else {
+                    setResponse(res.data);
+                } 
             } catch (error) {
                 console.error("Error fetching data:", error);
             } finally {
@@ -69,31 +73,51 @@ const AdminDashboard = () => {
         }
     };
 
+    const handleLogout = async () => {
+        try {
+            await axios.post('http://localhost:5001/api/admin/logout', {}, {withCredentials: true});
+            window.location.href = '/';
+        } catch(err) {
+            console.error(`Error is ${err}`);
+        }
+    }
+
     return (
-        <div className="flex min-h-screen bg-gray-50">
-            <div className="w-1/6 bg-zinc-200 text-white p-6">
+        <div className="min-h-screen bg-gray-50">
+            <div className="flex justify-between items-center p-4 bg-zinc-600 text-white">
+                <h1 className="text-xl">Welcome, {response ? response.adminName : "Admin"}!</h1>
                 <button
-                    onClick={() => setView('users')}
-                    className="w-full text-left mb-4 p-2 bg-blue-700 hover:bg-blue-600 rounded-md"
+                    onClick={handleLogout}
+                    className="px-4 py-2 bg-red-600 hover:bg-red-500 rounded-md"
                 >
-                    Users
-                </button>
-                <button
-                    onClick={() => setView('lenders')}
-                    className="w-full text-left mb-4 p-2 bg-blue-700 hover:bg-blue-600 rounded-md"
-                >
-                    Lenders
-                </button>
-                <button
-                    onClick={() => setView('borrowers')}
-                    className="w-full text-left mb-4 p-2 bg-blue-700 hover:bg-blue-600 rounded-md"
-                >
-                    Borrowers
+                    Logout
                 </button>
             </div>
+            <div className="flex min-h-screen">
+                <div className="w-1/6 bg-zinc-200 text-white p-6">
+                    <button
+                        onClick={() => setView('users')}
+                        className="w-full text-left mb-4 p-2 bg-blue-700 hover:bg-blue-600 rounded-md"
+                    >
+                        Users
+                    </button>
+                    <button
+                        onClick={() => setView('lenders')}
+                        className="w-full text-left mb-4 p-2 bg-blue-700 hover:bg-blue-600 rounded-md"
+                    >
+                        Lenders
+                    </button>
+                    <button
+                        onClick={() => setView('borrowers')}
+                        className="w-full text-left mb-4 p-2 bg-blue-700 hover:bg-blue-600 rounded-md"
+                    >
+                        Borrowers
+                    </button>
+                </div>
 
-            <div className="w-5/6 p-6">
-                {renderContent()}
+                <div className="w-5/6 p-6">
+                    {renderContent()}
+                </div>
             </div>
         </div>
     );

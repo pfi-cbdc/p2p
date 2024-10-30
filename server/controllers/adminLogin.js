@@ -42,7 +42,7 @@ exports.loginAdmin = async (req, res) => {
             otpVerified: false,
             otpExpiration: expiration
         }
-        req.session.admin = tempAdmin;
+        req.session.tempAdmin = tempAdmin;
 
         await sendOtpToEmail(email, otp);
 
@@ -62,7 +62,7 @@ exports.loginAdmin = async (req, res) => {
 }
 
 exports.verifyOTP = async (req, res) => {
-    const adminSession = req.session.admin;
+    const adminSession = req.session.tempAdmin;
     const { otp } = req.body;
     try {
         const tempAdmin = adminSession;
@@ -73,6 +73,8 @@ exports.verifyOTP = async (req, res) => {
         if(tempAdmin.otp === otp && Date.now() <= tempAdmin.otpExpiration) {
             req.session.admin = {
                 id: tempAdmin.adminID,
+                firstName: tempAdmin.firstName,
+                lastName: tempAdmin.lastName,
                 email: tempAdmin.email,
                 otpVerified: true
             }

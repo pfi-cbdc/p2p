@@ -13,12 +13,14 @@ router.post('/verify-otp', verifyOTP);
 // router.post('/register', addAdmin);
 
 //route for admin logout
-router.post('/logout' ,logoutAdmin);
+router.post('/logout', isAdmin, logoutAdmin);
 
 // Route for details on the admin dashboard
-router.get('/dashboard' ,getDetails);
+router.post('/dashboard', isAdmin, getDetails);
 
 // Route to verify admin
-router.post('/me', isAdmin);
+router.post('/me', isAdmin, (req, res)=> {
+    res.status(200).json({message: "Go bro GO."});
+});
 
 module.exports = router;

@@ -14,7 +14,6 @@ exports.isAdmin = async (req, res, next) => {
             return res.status(400).json({message: 'Something is really wrong with you'});
         }
 
-        res.status(200).json({message: "All ok. You're Good to go"});
         next();
     } catch(e) {
         return res.status(400).json({message: `${e}`});
