@@ -13,7 +13,7 @@ import ProtectedRoute from './components/ProtectedRoute'; // Import ProtectedRou
 import './App.css';
 import AdminLogin from './components/Admin.js';
 import AdminDashboard from './components/AdminDashboard.jsx';
-import AdminProtectedRoute from './components/AdminProtectedRoute.js';
+import AdminProtectedRoute, { AdminLoginProtection } from './components/AdminProtectedRoute.js';
 
 function Root() {
   const location = useLocation();
@@ -60,7 +60,14 @@ function Root() {
               </ProtectedRoute>
             } 
           />
-          <Route path='/admin-pfi-2406' element={<AdminLogin />} />
+          <Route 
+            path='/admin-pfi-2406' 
+            element={
+              <AdminLoginProtection>
+                <AdminLogin />
+              </AdminLoginProtection>
+            } 
+          />
           <Route 
             path='/admin-pfi-2406/dashboard' 
             element={

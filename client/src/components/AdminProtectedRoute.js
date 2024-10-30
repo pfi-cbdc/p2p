@@ -30,10 +30,44 @@ const AdminProtectedRoute = ({ children }) => {
     }
 
     if (!isAdmin) {
-        return <Navigate to="/admin-pfi-2406" />;
+        return <Navigate to="/" />;
     }
 
     return children;
 };
+
+export const AdminLoginProtection = ({children}) => {
+    const [isAdmin, setIsAdmin] = useState(null);
+    const [loading, setLoading] = useState(true);
+    
+    useEffect(() => {
+        const checkAdminStatus = async () => {
+            try {
+                const response = await axios.post('http://localhost:5001/api/admin/verify-user', {}, { withCredentials: true });
+                if (response.status === 200) {
+                    setIsAdmin(true);
+                } else {
+                    setIsAdmin(false);
+                }
+            } catch (error) {
+                setIsAdmin(false);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        checkAdminStatus();
+    }, []);
+
+    if (loading) {
+        return <p>Loading...</p>;
+    }
+
+    if (!isAdmin) {
+        return <Navigate to="/" />;
+    }
+
+    return children;
+}
 
 export default AdminProtectedRoute;
