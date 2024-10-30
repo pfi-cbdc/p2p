@@ -3,7 +3,7 @@ import React from 'react';
 import Invest from './Invest';
 
 const LenderDashboard = () => {
-    const firstName = localStorage.getItem('firstName'); // Retrieve first name from local storage
+    const firstName = localStorage.getItem('firstName'); 
 
     return (
         <div className="min-h-screen bg-gray-100">

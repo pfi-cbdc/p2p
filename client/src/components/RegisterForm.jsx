@@ -28,12 +28,14 @@ const Registration = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    if (otpSent) return;
     try {
       const response = await api.post("/register", formData);
       localStorage.setItem('firstName', formData.firstName);
+      localStorage.setItem('email', formData.email);
       setMessage(response.data.message);
       
-      await api.post("/send-otp", { email: formData.email });
+      // await api.post("/send-otp", { email: formData.email });
       setOtpSent(true);
     } catch (error) {
       setMessage(error.response?.data?.message || "Error during registration");

@@ -25,6 +25,11 @@ exports.registerUser = async (req, res) => {
       return res.status(400).json({ message: "Phone number already in use" });
     }
 
+    // Check if OTP already exists in session
+    if (req.session.tempUser && req.session.tempUser.otp) {
+      return res.status(400).json({ message: "OTP already sent. Please verify." });
+    }
+
     // Generate OTP
     const otp = generateOtp();
     const expiration = Date.now() + OTP_EXPIRE_TIME;
@@ -45,7 +50,6 @@ exports.registerUser = async (req, res) => {
 
     // Send OTP email
     await sendOtpToEmail(email, otp);
-    // console.log(otp);
 
     res.status(200).json({ message: "OTP sent to your email. Please verify." });
   } catch (error) {

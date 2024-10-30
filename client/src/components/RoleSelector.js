@@ -4,14 +4,13 @@ import { useNavigate } from 'react-router-dom';
 const RolePage = () => {
     const navigate = useNavigate();
     const firstName = localStorage.getItem('firstName');
-    const isLender = localStorage.getItem('isLender');
 
     useEffect(() => {
         // Redirect to login if user is not logged in
         if (!firstName) {
             navigate('/login');
         } 
-    }, [firstName, isLender, navigate]);
+    }, [firstName, navigate]);
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen">

@@ -34,7 +34,7 @@ function App() {
             path="/borrower" 
             element={
               <ProtectedRoute>
-                <BorrowerForm />
+                <BorrowerForm email={localStorage.getItem('email')} />
               </ProtectedRoute>
             } 
           />
