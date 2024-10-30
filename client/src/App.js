@@ -10,6 +10,10 @@ import Registration from './components/RegisterForm.jsx';
 import Login from './components/LoginForm.jsx';
 import RoleSelector from './components/RoleSelector.js' // Import Login component
 import './App.css';
+import AdminLogin from './components/Admin.js';
+import AdminDashboard from './components/AdminDashboard.jsx';
+import AdminProtectedRoute from './components/AdminProtectedRoute.js';
+
 
 function App() {
   return (
@@ -26,6 +30,12 @@ function App() {
           <Route path="/register" element={<Registration />} />
           <Route path="/login" element={<Login />} /> 
         </Routes>
+      </div>
+      <div>
+        <Routes>
+            <Route path='/admin-pfi-2406' element={<AdminLogin />} />
+            <Route path='/admin-pfi-2406/dashboard' element={<AdminProtectedRoute><AdminDashboard /></AdminProtectedRoute>} />
+          </Routes>
       </div>
     </Router>
   );
