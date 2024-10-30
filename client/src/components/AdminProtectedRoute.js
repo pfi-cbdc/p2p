@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Navigate } from 'react-router-dom';
+import UnauthorizedAccess from './UnauthorizedAccess'
 
 const AdminProtectedRoute = ({ children }) => {
     const [isAdmin, setIsAdmin] = useState(null);
@@ -30,7 +30,7 @@ const AdminProtectedRoute = ({ children }) => {
     }
 
     if (!isAdmin) {
-        return <Navigate to="/" />;
+        return <UnauthorizedAccess />
     }
 
     return children;
@@ -64,7 +64,7 @@ export const AdminLoginProtection = ({children}) => {
     }
 
     if (!isAdmin) {
-        return <Navigate to="/" />;
+        return <UnauthorizedAccess />
     }
 
     return children;
