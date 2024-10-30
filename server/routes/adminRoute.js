@@ -1,6 +1,6 @@
 const express = require('express');
 const { loginAdmin, addAdmin, logoutAdmin, verifyOTP } = require('../controllers/adminLogin');
-const { getDetails } = require('../controllers/adminDetails');
+const { getDetails, checkUser } = require('../controllers/adminDetails');
 const { isAdmin } = require('../Middlewares/adminAuth');
 
 const router = express.Router();
@@ -22,5 +22,8 @@ router.post('/dashboard', isAdmin, getDetails);
 router.post('/me', isAdmin, (req, res)=> {
     res.status(200).json({message: "Go bro GO."});
 });
+
+// Route to verify the user
+router.post('/verify-user', checkUser);
 
 module.exports = router;

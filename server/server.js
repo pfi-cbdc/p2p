@@ -46,7 +46,7 @@ app.use(
 // Configure express-rate-limiter
 const rateLimitMiddleware = setRateLimit({
   windowMs: 60 * 1000, // 1 minute
-  max: 10,
+  max: 50,
   message: "You have exceeded your requests per minute limit",
   headers: true
 });
