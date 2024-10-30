@@ -10,7 +10,7 @@ require("dotenv").config();
 
 const lenderRoutes = require("./routes/lender");
 const borrowerRoutes = require("./routes/borrower");
-// const invoiceRoutes = require("./routes/Invoice");
+const invoiceRoutes = require("./routes/invoice");
 const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require('./routes/adminRoute');
 
@@ -63,6 +63,8 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+app.use(upload.single('fileUpload')); // Ensure this is set up to handle file uploads
+
 // MongoDB connection
 mongoose
   .connect(process.env.MONGODB_URI)
@@ -87,7 +89,7 @@ app.use("/api/borrower", borrowerRoutes);
 app.use('/api/admin', rateLimitMiddleware,  adminRoutes);
 
 // Invoice route
-// app.use("/api/invoice", invoiceRoutes);
+app.use("/api/invoice", invoiceRoutes);
 
 // Serve uploaded files statically (if needed)
 app.use("/uploads", express.static("uploads"));

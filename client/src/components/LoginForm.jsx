@@ -1,75 +1,85 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Use useNavigate for routing
+import { useNavigate } from 'react-router-dom';
+
+const api = axios.create({
+  baseURL: "http://localhost:5001/api/auth",
+  withCredentials: true,
+});
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const navigate = useNavigate(); // Initialize useNavigate
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setErrorMessage(''); // Clear previous error messages
+        setErrorMessage('');
 
         try {
-            const response = await axios.post('http://localhost:5001/api/auth/login', {
-                email,
-                password,
-            }, { withCredentials: true }); // Include withCredentials to send cookies
+            const response = await api.post('/login', { email, password });
+            localStorage.setItem('email', email);
+            localStorage.setItem('firstName', response.data.firstName);
 
-            // Ensure the response includes the user's first name
-            if (response.data.user && response.data.user.firstName) {
-                // Store the user's first name in localStorage
-                localStorage.setItem('firstName', response.data.user.firstName);
-                alert(response.data.message);
-                navigate('/role'); // Redirect to the role page after login
-            } else {
-                setErrorMessage('Login successful, but user information is not available.');
+            if (response.data.redirect) {
+                const userCheckResponse = await api.get(`/check-user/${email}`);
+                if (userCheckResponse.data.isLender) {
+                    navigate('/lender-dashboard');
+                } else if (userCheckResponse.data.isBorrower) {
+                    navigate('/borrower-dashboard');
+                } else {
+                    navigate('/role');
+                }
             }
         } catch (error) {
-            if (error.response) {
-                setErrorMessage(error.response.data.message || 'An error occurred');
-            } else {
-                setErrorMessage('Network error. Please try again.');
-            }
+            setErrorMessage(error.response?.data?.message || 'Error during login');
         }
     };
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen">
-            <h2 className="text-2xl font-bold mb-4">Login</h2>
-            <form onSubmit={handleSubmit} className="w-full max-w-sm">
-                <div className="mb-4">
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-                    <input
-                        type="email"
-                        id="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="mt-1 p-2 border border-gray-300 rounded-md w-full"
-                        required
-                    />
-                </div>
-                <div className="mb-4">
-                    <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
-                    <input
-                        type="password"
-                        id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="mt-1 p-2 border border-gray-300 rounded-md w-full"
-                        required
-                    />
-                </div>
-                {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-                <button
-                    type="submit"
-                    className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
-                >
-                    Login
-                </button>
-            </form>
+        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+            <div className="w-full max-w-md p-8 space-y-6 bg-white shadow-lg rounded-lg">
+                <h2 className="text-2xl font-bold text-center text-gray-800">Login</h2>
+
+                {errorMessage && <p className="text-center text-red-500">{errorMessage}</p>}
+
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                        <label htmlFor="email" className="block text-lg font-medium text-gray-700">Email</label>
+                        <input
+                            type="email"
+                            id="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="password" className="block text-lg font-medium text-gray-700">Password</label>
+                        <input
+                            type="password"
+                            id="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                            required
+                        />
+                    </div>
+                    <button
+                        type="submit"
+                        className="w-full px-4 py-2 font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none"
+                    >
+                        Log In
+                    </button>
+                </form>
+
+                <p className="text-center text-gray-600">
+                    Don’t have an account? 
+                    <a href="/register" className="text-blue-500 hover:underline"> Register here</a>
+                </p>
+            </div>
         </div>
     );
 };
