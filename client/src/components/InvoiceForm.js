@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import FileUpload from './FileUpload'; // Import the FileUpload component
+import { useNavigate } from "react-router-dom";
 
 const InvoiceForm = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +12,9 @@ const InvoiceForm = () => {
     interestRate: ''
   });
 
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+  const navigate = useNavigate();
+  
   // Handle file selection
   const handleFileSelect = (file) => {
     setFormData({ ...formData, fileUpload: file });
@@ -25,24 +29,46 @@ const InvoiceForm = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Create FormData object to send file + form data
-    const formDataToSend = new FormData();
-    formDataToSend.append('fileUpload', formData.fileUpload);  // Append the file
-    formDataToSend.append('typeOfBusiness', formData.typeOfBusiness);
-    formDataToSend.append('tenureOfInvoice', formData.tenureOfInvoice);
-    formDataToSend.append('interestRate', formData.interestRate);
+    setButtonDisabled(true);
 
     try {
-      const response = await axios.post('http://localhost:5001/api/invoice', formDataToSend, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      console.log(response.data);
-      alert('Form submitted successfully!');
+      // first check the kyc completion
+      const email = localStorage.getItem('email');
+      if(!email) {
+          alert('Error! Please login again');
+          setButtonDisabled(false);
+          navigate(-1);
+      };
+      const res = await axios.get(`http://localhost:5001/api/borrower/status?email=${email}`);
+      if(!res) {
+          alert('There has been a misunderstanding. Please try again later');
+          setButtonDisabled(false);
+          navigate(-1);
+      };
+      if(!res.data.exists) {
+          alert('Please complete your KYC first');
+          setButtonDisabled(false);
+          navigate('/borrower');
+      } else {
+        // Create FormData object to send file + form data
+        const formDataToSend = new FormData();
+        formDataToSend.append('fileUpload', formData.fileUpload);  // Append the file
+        formDataToSend.append('typeOfBusiness', formData.typeOfBusiness);
+        formDataToSend.append('tenureOfInvoice', formData.tenureOfInvoice);
+        formDataToSend.append('interestRate', formData.interestRate);
+  
+        const response = await axios.post('http://localhost:5001/api/invoice', formDataToSend, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        console.log(response.data);
+        setButtonDisabled(false);
+        alert('Form submitted successfully!');
+      }
     } catch (error) {
       console.error('Submission error:', error);
+      setButtonDisabled(false);
       alert('Failed to submit form. Please try again.');
     }
   };
@@ -62,7 +88,7 @@ const InvoiceForm = () => {
       <input type="number" name="tenureOfInvoice" placeholder="Tenure of Invoice" onChange={handleChange} required className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500" />
       <input type="number" name="interestRate" placeholder="Interest Rate" onChange={handleChange} required className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500" />
       
-      <button type="submit" className="w-full px-4 py-2 mt-4 font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none">Submit</button>
+      <button type="submit"  disabled={buttonDisabled} className="w-full px-4 py-2 mt-4 font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none">Submit</button>
     </form>
   );
 };
