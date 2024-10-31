@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import FileUpload from './FileUpload'; // Import the FileUpload component
+import { useNavigate } from "react-router-dom";
 
 const InvoiceForm = ({ email, firstName }) => {
   const [formData, setFormData] = useState({
@@ -12,6 +13,8 @@ const InvoiceForm = ({ email, firstName }) => {
     email: email, // Add email to formData
     firstName: firstName // Add firstName to formData
   });
+  const [buttonDiabled, setButtonDisabled] = useState(false);
+  const navigate = useNavigate();
 
   // Handle file selection
   const handleFileSelect = (file) => {
@@ -34,8 +37,6 @@ const InvoiceForm = ({ email, firstName }) => {
     formDataToSend.append('typeOfBusiness', formData.typeOfBusiness);
     formDataToSend.append('tenureOfInvoice', formData.tenureOfInvoice);
     formDataToSend.append('interestRate', formData.interestRate);
-    formDataToSend.append('email', formData.email); // Append email
-    formDataToSend.append('firstName', formData.firstName); // Append firstName
 
     try {
       const response = await axios.post('http://localhost:5001/api/invoice', formDataToSend, {
@@ -47,6 +48,7 @@ const InvoiceForm = ({ email, firstName }) => {
       alert('Form submitted successfully!');
     } catch (error) {
       console.error('Submission error:', error);
+      setButtonDisabled(false);
       alert('Failed to submit form. Please try again.');
     }
   };
@@ -66,7 +68,7 @@ const InvoiceForm = ({ email, firstName }) => {
       <input type="number" name="tenureOfInvoice" placeholder="Tenure of Invoice" onChange={handleChange} required className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500" />
       <input type="number" name="interestRate" placeholder="Interest Rate" onChange={handleChange} required className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500" />
       
-      <button type="submit" className="w-full px-4 py-2 mt-4 font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none">Submit</button>
+      <button type="submit" disabled={buttonDiabled} className="w-full px-4 py-2 mt-4 font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none">Submit</button>
     </form>
   );
 };
