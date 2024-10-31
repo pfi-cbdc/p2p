@@ -3,14 +3,12 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import FileUpload from './FileUpload'; // Import the FileUpload component
 
-const InvoiceForm = ({ email, firstName }) => {
+const InvoiceForm = () => {
   const [formData, setFormData] = useState({
     fileUpload: null,  // This will store the file object
     typeOfBusiness: 'Select',
     tenureOfInvoice: '',
-    interestRate: '',
-    email: email, // Add email to formData
-    firstName: firstName // Add firstName to formData
+    interestRate: ''
   });
 
   // Handle file selection
@@ -34,8 +32,6 @@ const InvoiceForm = ({ email, firstName }) => {
     formDataToSend.append('typeOfBusiness', formData.typeOfBusiness);
     formDataToSend.append('tenureOfInvoice', formData.tenureOfInvoice);
     formDataToSend.append('interestRate', formData.interestRate);
-    formDataToSend.append('email', formData.email); // Append email
-    formDataToSend.append('firstName', formData.firstName); // Append firstName
 
     try {
       const response = await axios.post('http://localhost:5001/api/invoice', formDataToSend, {

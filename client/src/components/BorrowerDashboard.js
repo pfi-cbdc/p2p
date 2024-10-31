@@ -4,8 +4,7 @@ import InvoiceForm from './InvoiceForm';
 
 const BorrowerDashboard = () => {
     const firstName = localStorage.getItem('firstName');
-    const email = localStorage.getItem('email');
-    const [showInvoiceForm, setShowInvoiceForm] = useState(false);
+    const [showInvoiceForm, setShowInvoiceForm] = useState(true);
 
     return (
         <div className="min-h-screen bg-gray-100">
@@ -22,7 +21,9 @@ const BorrowerDashboard = () => {
 
                 {/* ye form ka area hai*/}
                 <div className="flex-1">
-                    {showInvoiceForm && <InvoiceForm email={email} firstName={firstName} />}
+                    {showInvoiceForm && <div>
+                      <InvoiceForm />
+                    </div>}
                 </div>
                 </div>
 

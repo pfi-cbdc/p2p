@@ -16,9 +16,7 @@ router.post('/', async (req, res) => {
             fileUpload: result.secure_url, // Save the Cloudinary URL
             typeOfBusiness: req.body.typeOfBusiness,
             tenureOfInvoice: req.body.tenureOfInvoice,
-            interestRate: req.body.interestRate,
-            email: req.body.email, // Save email
-            firstName: req.body.firstName // Save firstName
+            interestRate: req.body.interestRate
         });
 
         await newInvoice.save();
