@@ -33,4 +33,16 @@ router.get('/check-user/:email', async (req, res) => {
     }
 });
 
+
+// Fetch all users for admin dashboard
+router.get('/all', async (req, res) => {
+    try {
+        const users = await User.find();
+        res.status(200).json(users);
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        res.status(400).json({ message: 'Error fetching users', error });
+    }
+});
+
 module.exports = router;

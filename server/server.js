@@ -78,6 +78,7 @@ app.get("/", (req, res) => {
 
 // Auth route
 app.use("/api/auth", authRoutes);
+app.use("/api/users", authRoutes)
 
 // Lender route
 app.use("/api/lender", lenderRoutes);

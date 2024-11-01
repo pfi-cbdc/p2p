@@ -20,7 +20,53 @@ const AdminDashboard = () => {
         fetchDetails();
     }, []);
 
-    const fetchInvoices = async () => {
+    const fetchUsers = async () => {
+       try{
+            const res = await axios.get('http://localhost:5001/api/users/all', {
+                withCredentials: true
+            });
+            if(res.status === 200){
+                setResponse(prev => ({ ...prev, users: res.data}))
+            }
+        }catch(error){
+            console.error("Error fetching users: ", error)
+        }
+    };
+
+
+    const renderUsers = () => {
+        if (!response?.users) return <p>No users available.</p>;
+
+        return (
+            <div className="p-4">
+                <h2 className="text-2xl font-semibold mb-4">Users List</h2>
+                <table className="min-w-full bg-white border border-gray-300">
+                    <thead>
+                        <tr>
+                            <th className="border px-4 py-2">First Name</th>
+                            <th className="border px-4 py-2">Last Name</th>
+                            <th className="border px-4 py-2">Email</th>
+                            <th className="border px-4 py-2">Phone</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {response.users.map((user) => (
+                            <tr key={user._id}>
+                                <td className="border px-4 py-2">{user.firstName}</td>
+                                <td className="border px-4 py-2">{user.lastName}</td>
+                                <td className="border px-4 py-2">{user.email}</td>
+                                <td className="border px-4 py-2">{user.phone}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        );
+    };
+
+
+    /* invoices fetch krne wala kaam*/
+       const fetchInvoices = async () => {
         try {
             const res = await axios.get('http://localhost:5001/api/invoices/all', { withCredentials: true });
             if (res.status === 200) {
@@ -84,18 +130,7 @@ const AdminDashboard = () => {
 
         switch (view) {
             case 'users':
-                return (
-                    <div className="p-4">
-                        <h2 className="text-2xl font-semibold mb-4">User List</h2>
-                        <ul className="space-y-2">
-                            {response.users.map((user) => (
-                                <li key={user.id} className="p-2 bg-gray-100 rounded-md">
-                                    {user.firstName} - {user.email}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                );
+                return renderUsers();
             case 'lenders':
                 return (
                     <div className="p-4">
@@ -146,7 +181,7 @@ const AdminDashboard = () => {
             </div>
             <div className="flex min-h-screen">
                 <div className="w-1/6 bg-zinc-200 text-white p-6">
-                    <button onClick={() => setView('users')} className="w-full text-left mb-4 p-2 bg-blue-700 hover:bg-blue-600 rounded-md">Users</button>
+                    <button onClick={() => setView('users') || fetchUsers()} className="w-full text-left mb-4 p-2 bg-blue-700 hover:bg-blue-600 rounded-md">Users</button>
                     <button onClick={() => setView('borrowers')} className="w-full text-left mb-4 p-2 bg-blue-700 hover:bg-blue-600 rounded-md">Borrowers</button>
                     <button onClick={() => setView('lenders')} className="w-full text-left mb-4 p-2 bg-blue-700 hover:bg-blue-600 rounded-md">Lenders</button>
                     <button onClick={() => setView('invoices') || fetchInvoices()} className="w-full text-left mb-4 p-2 bg-blue-700 hover:bg-blue-600 rounded-md">Invoices</button>
