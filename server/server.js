@@ -63,7 +63,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-app.use(upload.single('fileUpload')); // Ensure this is set up to handle file uploads
+// app.use(upload.single('fileUpload')); // Ensure this is set up to handle file uploads
 
 // MongoDB connection
 mongoose
@@ -90,6 +90,8 @@ app.use('/api/admin', rateLimitMiddleware,  adminRoutes);
 
 // Invoice route
 app.use("/api/invoice", invoiceRoutes);
+app.use('/api/invoices', invoiceRoutes);  // Invoice route
+
 
 // Serve uploaded files statically (if needed)
 app.use("/uploads", express.static("uploads"));

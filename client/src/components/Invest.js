@@ -50,7 +50,7 @@ const Invest = () => {
     }
 
     return (
-        <div className="bg-white shadow-lg rounded-lg p-6 rounded-lg">
+        <div className="bg-white shadow-lg p-6 rounded-lg">
             <form onSubmit={submitHandler} className="space-y-6">
                 <div>
                     <label className="block font-medium mb-2">Amount:</label>

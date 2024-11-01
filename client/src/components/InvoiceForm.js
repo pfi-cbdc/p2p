@@ -9,7 +9,9 @@ const InvoiceForm = () => {
     fileUpload: null,  // This will store the file object
     typeOfBusiness: 'Select',
     tenureOfInvoice: '',
-    interestRate: ''
+    interestRate: '',
+    firstName: localStorage.getItem('firstName') || '',
+    email: localStorage.getItem('email') || ''
   });
 
   const [buttonDisabled, setButtonDisabled] = useState(false);
@@ -56,6 +58,10 @@ const InvoiceForm = () => {
         formDataToSend.append('typeOfBusiness', formData.typeOfBusiness);
         formDataToSend.append('tenureOfInvoice', formData.tenureOfInvoice);
         formDataToSend.append('interestRate', formData.interestRate);
+        formDataToSend.append('firstName', formData.firstName);
+        formDataToSend.append('email', formData.email);
+  
+        // console.log([...formDataToSend]); // This will log the FormData entries
   
         const response = await axios.post('http://localhost:5001/api/invoice', formDataToSend, {
           headers: {
@@ -74,7 +80,8 @@ const InvoiceForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-lg p-8 space-y-6 bg-white shadow-md rounded-lg">
+    <form onSubmit={handleSubmit} enctype="multipart/form-data" className="w-full max-w-lg p-8 space-y-6 bg-white shadow-md rounded-lg">
+
       <FileUpload onFileSelect={handleFileSelect} /> {/* File upload component */}
       
       <select name="typeOfBusiness" onChange={handleChange} required className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500">

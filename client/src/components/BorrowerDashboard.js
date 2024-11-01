@@ -4,7 +4,7 @@ import InvoiceForm from './InvoiceForm';
 
 const BorrowerDashboard = () => {
     const firstName = localStorage.getItem('firstName');
-    const [showInvoiceForm, setShowInvoiceForm] = useState(true);
+    const [showInvoiceForm, setShowInvoiceForm] = useState(false);
 
     return (
         <div className="min-h-screen bg-gray-100">
