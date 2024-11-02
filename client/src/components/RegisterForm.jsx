@@ -30,7 +30,7 @@ const Registration = () => {
     e.preventDefault();
     if (otpSent) return;
     try {
-      const response = await api.post("/register", formData);
+      const response = await api.post("/api/auth/register", formData);
       localStorage.setItem('firstName', formData.firstName);
       localStorage.setItem('email', formData.email);
       setMessage(response.data.message);
