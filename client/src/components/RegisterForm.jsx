@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
+import api from "../api/axios";
 
-const api = axios.create({
-  baseURL: "http://localhost:5001/api/auth",
-  withCredentials: true,
-});
+// const api = axios.create({
+//   baseURL: "http://localhost:5001/api/auth",
+//   withCredentials: true,
+// });
 
 const Registration = () => {
   const [formData, setFormData] = useState({
