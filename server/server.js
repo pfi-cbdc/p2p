@@ -85,6 +85,7 @@ app.use("/api/lender", lenderRoutes);
 
 // Borrower route
 app.use("/api/borrower", borrowerRoutes);
+app.use('/api/borrowers', borrowerRoutes);
 
 // Admin Route
 app.use('/api/admin', rateLimitMiddleware,  adminRoutes);

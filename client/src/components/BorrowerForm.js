@@ -2,17 +2,19 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import FileUpload from './FileUpload'; // Import the FileUpload component
 
 const BorrowerForm = () => {
     const [formData, setFormData] = useState({
-        aadharCard: '',
-        panCard: '',
+        firstName: localStorage.getItem('firstName') || '', // Retrieve first name from localStorage
+        email: localStorage.getItem('email') || '',
+        aadharCard: [],
+        panCard: [],
         gender: '',
         dateOfBirth: '',
-        accountStatement: '',
+        accountStatement: [],
         gstNumber: '',
         typeOfBusiness: '',
-        email: localStorage.getItem('email') || ''
     });
 
     const navigate = useNavigate();
@@ -24,12 +26,27 @@ const BorrowerForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const formDataToSend = new FormData();
+        for (const key in formData) {
+            if (Array.isArray(formData[key])) {
+                formData[key].forEach(file => {
+                    formDataToSend.append(key, file);
+                });
+            } else {
+                formDataToSend.append(key, formData[key]);
+            }
+        }
         try {
-            const response = await axios.post('http://localhost:5001/api/borrower', formData);
+            const response = await axios.post('http://localhost:5001/api/borrower', formDataToSend, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
             console.log(response.data);
             navigate('/borrower-dashboard'); 
         } catch (error) {
             if (error.response) {
+                console.error('Error response:', error.response.data);
                 alert(`Error: ${error.response.data.message || 'An error occurred'}`);
             } else {
                 alert('Network error. Please try again.');
@@ -52,29 +69,17 @@ const BorrowerForm = () => {
                 <div className="space-y-4">
                     <div>
                         <label htmlFor="aadharCard" className="block text-lg font-medium text-gray-700">Aadhar Card</label>
-                        <input 
-                            type="text" 
-                            name="aadharCard" 
-                            id="aadharCard" 
-                            placeholder="Enter Aadhar Card Number"
-                            value={formData.aadharCard} 
-                            onChange={handleChange} 
-                            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500" 
-                            required 
+                        <FileUpload 
+                            onFileSelect={(file) => setFormData({ ...formData, aadharCard: [...formData.aadharCard, file] })} // Update state with uploaded file
+                            multiple={true} // Allow multiple file selection
                         />
                     </div>
 
                     <div>
                         <label htmlFor="panCard" className="block text-lg font-medium text-gray-700">PAN Card</label>
-                        <input 
-                            type="text" 
-                            name="panCard" 
-                            id="panCard" 
-                            placeholder="Enter PAN Card Number"
-                            value={formData.panCard} 
-                            onChange={handleChange} 
-                            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500" 
-                            required 
+                        <FileUpload 
+                            onFileSelect={(file) => setFormData({ ...formData, panCard: [...formData.panCard, file] })} // Update state with uploaded file
+                            multiple={true} // Allow multiple file selection
                         />
                     </div>
 
@@ -110,15 +115,9 @@ const BorrowerForm = () => {
 
                     <div>
                         <label htmlFor="accountStatement" className="block text-lg font-medium text-gray-700">Account Statement</label>
-                        <input 
-                            type="text" 
-                            name="accountStatement" 
-                            id="accountStatement" 
-                            placeholder="Account Statement"
-                            value={formData.accountStatement} 
-                            onChange={handleChange} 
-                            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500" 
-                            required 
+                        <FileUpload 
+                            onFileSelect={(file) => setFormData({ ...formData, accountStatement: [...formData.accountStatement, file] })} // Update state with uploaded file
+                            multiple={true} // Allow multiple file selection
                         />
                     </div>
 
