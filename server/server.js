@@ -37,7 +37,7 @@ app.use(
     saveUninitialized: true,
     rolling: false, // Refresh session expiration on every request
     cookie: {
-      secure: false, // Set to true if using HTTPS
+      secure: true, // Set to true if using HTTPS
       maxAge: 30 * 60 * 1000, // Session expires after 30 minutes of inactivity
     },
   })
