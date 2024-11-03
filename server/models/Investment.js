@@ -14,11 +14,8 @@ const InvestmentSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    lenderID: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: "Lender"
-    }
+    firstName: { type: String, required: true },
+    email: { type: String, required: true }
 });
 
-module.exports = mongoose.model('Investments', InvestmentSchema);
+module.exports = mongoose.model('Investment', InvestmentSchema);

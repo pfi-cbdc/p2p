@@ -20,6 +20,72 @@ const AdminDashboard = () => {
         fetchDetails();
     }, []);
 
+
+
+    //lenders ka sara kaam
+    const fetchLenders = async () => {
+        try {
+            const res = await axios.get('http://localhost:5001/api/lender/all', { withCredentials: true });
+            if (res.status === 200) {
+                setResponse(prev => ({ ...prev, borrowers: res.data }));
+            }
+        } catch (error) {
+            console.error("Error fetching lenders:", error);
+        }
+    };
+    const renderLenders = () => {
+        if (!response?.borrowers) return <p>No lenders available.</p>;
+
+        return (
+            <div className="p-4">
+                <h2 className="text-2xl font-semibold mb-4">Lenders List</h2>
+                <table className="min-w-full bg-white border border-gray-300">
+                    <thead>
+                        <tr>
+                        <th className="border px-4 py-2">First Name</th>
+                            <th className="border px-4 py-2">Email</th>
+                            <th className="border px-4 py-2">Aadhar Card</th>
+                            <th className="border px-4 py-2">PAN Card</th>
+                            <th className="border px-4 py-2">Gender</th>
+                            <th className="border px-4 py-2">Account Statement</th>
+                            <th className="border px-4 py-2">GST Number</th>
+                            <th className="border px-4 py-2">Date of Birth</th>
+                            <th className="border px-4 py-2">Employment Status</th>
+                            <th className="border px-4 py-2">Status</th>
+                            <th className="border px-4 py-2">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {response.lenders.map((lender) => (
+                            <tr key={lender._id}>
+                                <td className="border px-4 py-2">{lender.firstName}</td>
+                                <td className="border px-4 py-2">{lender.email}</td>
+                                <td className="border px-4 py-2 text-blue-600"><a href={lender.aadharCard.join(', ')} target="_blank" rel="noopener noreferrer">View File</a></td>
+                                <td className="border px-4 py-2 text-blue-600"><a href={lender.panCard.join(', ')} target="_blank" rel="noopener noreferrer">View File</a></td>
+                                <td className="border px-4 py-2">{lender.gender}</td>
+                                <td className="border px-4 py-2 text-blue-600"><a href={lender.accountStatement.join(', ')} target="_blank" rel="noopener noreferrer">View File</a></td>
+                                <td className="border px-4 py-2">{lender.gstNumber}</td>
+                                <td className="border px-4 py-2">{new Date(lender.dateOfBirth).toLocaleDateString()}</td>
+                                <td className="border px-4 py-2">{lender.employmentStatus}</td>
+                                <td className="border px-4 py-2">{lender.status || 'Pending'}</td>
+                                <td className="border px-4 py-2">
+                                    <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded">
+                                        Accept
+                                    </button>
+                                    <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                                        Reject
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        );
+    };
+
+
+    //users ka sara kuch
     const fetchUsers = async () => {
        try{
             const res = await axios.get('http://localhost:5001/api/users/all', {
@@ -32,7 +98,6 @@ const AdminDashboard = () => {
             console.error("Error fetching users: ", error)
         }
     };
-
 
     const renderUsers = () => {
         if (!response?.users) return <p>No users available.</p>;
@@ -76,7 +141,6 @@ const AdminDashboard = () => {
             console.error("Error fetching invoices:", error);
         }
     };
-
     const renderInvoices = () => {
         if (!response?.invoices) return <p>No invoices available.</p>;
 
@@ -124,6 +188,8 @@ const AdminDashboard = () => {
         );
     };
 
+
+    //borrowers ka maa baap
     const fetchBorrowers = async () => {
         try {
             const res = await axios.get('http://localhost:5001/api/borrower/all', { withCredentials: true });
@@ -134,7 +200,6 @@ const AdminDashboard = () => {
             console.error("Error fetching borrowers:", error);
         }
     };
-
     const renderBorrowers = () => {
         if (!response?.borrowers) return <p>No borrowers available.</p>;
 
@@ -186,6 +251,63 @@ const AdminDashboard = () => {
         );
     };
 
+    
+//investments ka maai baap
+ const fetchInvestments = async () => {
+    try {
+        const res = await axios.get('http://localhost:5001/api/investments/all', { withCredentials: true });
+        if (res.status === 200) {
+            setResponse(prev => ({ ...prev, investments: res.data }));
+        }
+    } catch (error) {
+        console.error("Error fetching investments:", error);
+    }
+};
+const renderInvestments = () => {
+    if (!response?.investments) return <p>No investments available.</p>;
+
+    return (
+        <div className="p-4">
+            <h2 className="text-2xl font-semibold mb-4">Investments List</h2>
+            <table className="min-w-full bg-white border border-gray-300">
+                <thead>
+                    <tr>
+                        <th className="border px-4 py-2">First Name</th>
+                        <th className="border px-4 py-2">Email</th>
+                        <th className="border px-4 py-2">Amount</th>
+                        <th className="border px-4 py-2">Tenure</th>
+                        <th className="border px-4 py-2">Monthly Earnings</th>
+                        <th className="border px-4 py-2">Status</th>
+                        <th className="border px-4 py-2">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {response.investments.map((investment) => (
+                        <tr key={investment._id}>
+                            <td className="border px-4 py-2">{investment.firstName}</td>
+                            <td className="border px-4 py-2">{investment.email}</td>
+                            <td className="border px-4 py-2">{investment.amount}</td>
+                            <td className="border px-4 py-2">{investment.tenure}</td>
+                            <td className="border px-4 py-2">{investment.monthlyEarnings}</td>
+                            <td className="border px-4 py-2">{investment.status || 'Pending'}</td>
+                            <td className="border px-4 py-2">
+                                <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                                    Accept
+                                </button>
+                                <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                                    Reject
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    );
+};
+
+
+//kuch bhi
     const renderContent = () => {
         if (loading) return <p>Loading...</p>;
         if (!response) return <p>No data available.</p>;
@@ -196,20 +318,11 @@ const AdminDashboard = () => {
             case 'borrowers':
                 return renderBorrowers();
             case 'lenders':
-                return (
-                    <div className="p-4">
-                        <h2 className="text-2xl font-semibold mb-4">Lender List</h2>
-                        <ul className="space-y-2">
-                            {response.lenders.map((user) => (
-                                <li key={user.id} className="p-2 bg-gray-100 rounded-md">
-                                    {user.name} - {user.email}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                );
+                return renderLenders();
             case 'invoices':
                 return renderInvoices();
+                case 'investments':
+                return renderInvestments();
             default:
                 return <p className="text-gray-500">Select an option to view details.</p>;
         }
@@ -234,8 +347,9 @@ const AdminDashboard = () => {
                 <div className="w-1/6 bg-zinc-200 text-white p-6">
                     <button onClick={() => setView('users') || fetchUsers()} className="w-full text-left mb-4 p-2 bg-blue-700 hover:bg-blue-600 rounded-md">Users</button>
                     <button onClick={() => { setView('borrowers'); fetchBorrowers(); }} className="w-full text-left mb-4 p-2 bg-blue-700 hover:bg-blue-600 rounded-md">Borrowers</button>
-                    <button onClick={() => setView('lenders')} className="w-full text-left mb-4 p-2 bg-blue-700 hover:bg-blue-600 rounded-md">Lenders</button>
+                    <button onClick={() => setView('lenders') || fetchLenders()} className="w-full text-left mb-4 p-2 bg-blue-700 hover:bg-blue-600 rounded-md">Lenders</button>
                     <button onClick={() => setView('invoices') || fetchInvoices()} className="w-full text-left mb-4 p-2 bg-blue-700 hover:bg-blue-600 rounded-md">Invoices</button>
+                    <button onClick={() => setView('investments') || fetchInvestments()} className="w-full text-left mb-4 p-2 bg-blue-700 hover:bg-blue-600 rounded-md">Investments</button>
                 </div>
                 <div className="w-5/6 p-6">{renderContent()}</div>
             </div>

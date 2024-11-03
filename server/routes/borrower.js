@@ -17,7 +17,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // POST route to create a new borrower with file uploads
-router.post('/', upload.fields([{ name: 'aadharCard', maxCount: 10 }, { name: 'panCard', maxCount: 10 }, { name: 'accountStatement', maxCount: 10 }]), async (req, res) => {
+router.post('/', upload.fields([{ name: 'aadharCard', maxCount: 1 }, { name: 'panCard', maxCount: 1 }, { name: 'accountStatement', maxCount: 1 }]), async (req, res) => {
     try {
         const uploadedFiles = {
             aadharCard: [],

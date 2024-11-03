@@ -3,69 +3,93 @@ import { useNavigate } from "react-router-dom";
 import  axios from 'axios';
 
 const Invest = () => {
-    const [amount, setAmount] = useState(0);
-    const [tenure, setTenure] = useState(1);
-    const [monthlyEarn, setEarnings] = useState('');
+    const [formData, setFormData] = useState({
+        amount: '',
+        tenure: '',
+        monthlyEarnings: '',
+        firstName: localStorage.getItem('firstName') || '',
+        email: localStorage.getItem('email') || ''
+      });
     const [buttonDisabled, setButtonDisabled] = useState(false);
     const navigate = useNavigate();
 
-    const submitHandler = async (e) => {
-        e.preventDefault();
-        setButtonDisabled(true);
-        try {
-            // first check the kyc completion
-            const email = localStorage.getItem('email');
-            if(!email) {
-                alert('Error! Please login again');
-                setButtonDisabled(false);
-                navigate(-1);
-            };
-            const response = await axios.get(`http://localhost:5001/api/lender/status?email=${email}`);
-            if(!response) {
-                alert('There has been a misunderstanding. Please try again later');
-                setButtonDisabled(false);
-                navigate(-1);
-            };
-            if(!response.data.exists) {
-                alert('Please complete your KYC first');
-                setButtonDisabled(false);
-                navigate('/lender');
-            } else {
-                const submitData = await axios.post('http://localhost:5001/api/lender/newInv', {amount: Number(amount), tenure: Number(tenure), monthlyEarnings: monthlyEarn, email: email});
-                if(!submitData) {
-                    alert('Error in adding a new Investment');
-                    setButtonDisabled(false);
-                    navigate(-1);
-                }
-                else {
-                    alert('Added Investment');
-                    setButtonDisabled(false);
-                }
-            }
-        }
-        catch(e) {
-            setButtonDisabled(false);
-            console.error(e);
-        }
+    // Handle text and select inputs
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setButtonDisabled(true);
+
+    try {
+      // First check the KYC completion
+      const email = localStorage.getItem('email');
+      if (!email) {
+          alert('Error! Please login again');
+          setButtonDisabled(false);
+          navigate(-1);
+          return; // Ensure to return after navigating
+      }
+
+      const res = await axios.get(`http://localhost:5001/api/lender/status?email=${email}`);
+      if (!res) {
+          alert('There has been a misunderstanding. Please try again later');
+          setButtonDisabled(false);
+          navigate(-1);
+          return; // Ensure to return after navigating
+      }
+
+      if (!res.data.exists) {
+          alert('Please complete your KYC first');
+          setButtonDisabled(false);
+          navigate('/borrower');
+          return; // Ensure to return after navigating
+      } else {
+
+        const response = await axios.post('http://localhost:5001/api/investment', {
+            amount: formData.amount,
+            tenure: formData.tenure,
+            monthlyEarnings: formData.monthlyEarnings,
+            firstName: formData.firstName,
+            email: formData.email,
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+          });
+          console.log(response.data);
+          alert('Form submitted successfully!');
+      }
+    } catch (error) {
+        console.error('Submission error:', error);
+        alert('Failed to submit form. Please try again.');
+    } finally {
+        setButtonDisabled(false);
     }
+  };
+
+       
+           
+    
 
     return (
         <div className="bg-white shadow-lg p-6 rounded-lg">
-            <form onSubmit={submitHandler} className="space-y-6">
+            <form onSubmit={handleSubmit} enctype="multipart/form-data" className="w-full max-w-lg p-8 space-y-6 bg-white shadow-md rounded-lg">
                 <div>
                     <label className="block font-medium mb-2">Amount:</label>
-                    <input type="number" id="amount" placeholder="Enter amount(INR):" className="shadow-lg" onChange={(e) => {setAmount(e.target.value)}} />
+                    <input type="number" name="amount" placeholder="Amount(in INR)" onChange={handleChange} required className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500" />
                 </div>
                 <div>
                     <label className="block font-medium mb-2">Tenure:</label>
-                    <input type="range" id="tenure" min={1} max={36} value={1} className="shadow-lg" onChange={(e) => {setTenure(e.target.value)}} />
-                    <span className="text-sm">{tenure} months</span>
+                    <input type="number" name="tenure" placeholder="Tenure of Investment" onChange={handleChange} required className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500" />
                 </div>
                 <div>
                     <label className="block font-medium mb-2">Monthly Earnings:</label>
-                    <input type="number" id="monthlyEarn" placeholder="Enter Monthly Earnings" className="shadow-lg" onChange={(e) => {setEarnings(e.target.value)}} />
+                    <input type="number" name="monthlyEarnings" placeholder="Montly Earnings" onChange={handleChange} required className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500" />
                 </div>
-                <button type="submit" disabled={buttonDisabled} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">I am ready to invest</button>
+                <button type="submit"  disabled={buttonDisabled} className="w-full px-4 py-2 mt-4 font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none">Submit</button>
             </form>
         </div>
     );

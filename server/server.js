@@ -13,6 +13,7 @@ const borrowerRoutes = require("./routes/borrower");
 const invoiceRoutes = require("./routes/invoice");
 const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require('./routes/adminRoute');
+const investmentRoutes = require('./routes/investment')
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -27,6 +28,7 @@ app.use(
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
 
 // Configure express-session
 app.use(
@@ -82,6 +84,7 @@ app.use("/api/users", authRoutes)
 
 // Lender route
 app.use("/api/lender", lenderRoutes);
+app.use('/api/lenders', lenderRoutes)
 
 // Borrower route
 app.use("/api/borrower", borrowerRoutes);
@@ -89,6 +92,10 @@ app.use('/api/borrowers', borrowerRoutes);
 
 // Admin Route
 app.use('/api/admin', rateLimitMiddleware,  adminRoutes);
+
+//investment ka randi rona
+app.use('/api/investment', investmentRoutes);
+app.use('/api/investments', investmentRoutes)
 
 // Invoice route
 app.use("/api/invoice", invoiceRoutes);
