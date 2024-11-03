@@ -35,7 +35,7 @@ const Registration = () => {
       localStorage.setItem('email', formData.email);
       setMessage(response.data.message);
       
-      // await api.post("/send-otp", { email: formData.email });
+      await api.post("/api/auth/send-otp", { email: formData.email });
       setOtpSent(true);
     } catch (error) {
       setMessage(error.response?.data?.message || "Error during registration");
@@ -45,7 +45,7 @@ const Registration = () => {
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
     try {
-      const response = await api.post("/verify-otp", { otp });
+      const response = await api.post("/api/auth/verify-otp", { otp });
       setMessage(response.data.message);
       if (response.status === 200) {
         window.location.href = "/role";

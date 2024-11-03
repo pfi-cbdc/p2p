@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import  axios from 'axios';
+import api from '../api/axios';
 
 const Invest = () => {
     const [amount, setAmount] = useState(0);
@@ -20,7 +20,7 @@ const Invest = () => {
                 setButtonDisabled(false);
                 navigate(-1);
             };
-            const response = await axios.get(`http://localhost:5001/api/lender/status?email=${email}`);
+            const response = await api.get(`/api/lender/status?email=${email}`);
             if(!response) {
                 alert('There has been a misunderstanding. Please try again later');
                 setButtonDisabled(false);
@@ -31,7 +31,7 @@ const Invest = () => {
                 setButtonDisabled(false);
                 navigate('/lender');
             } else {
-                const submitData = await axios.post('http://localhost:5001/api/lender/newInv', {amount: Number(amount), tenure: Number(tenure), monthlyEarnings: monthlyEarn, email: email});
+                const submitData = await api.post('/api/lender/newInv', {amount: Number(amount), tenure: Number(tenure), monthlyEarnings: monthlyEarn, email: email});
                 if(!submitData) {
                     alert('Error in adding a new Investment');
                     setButtonDisabled(false);

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; // Use useNavigate for routing
+import api from '../api/axios';
 
 const AdminLogin = () => {
     const [email, setEmail] = useState('');
@@ -16,11 +16,11 @@ const AdminLogin = () => {
         e.preventDefault();
         try {
             setButtonState(true);
-            const response = await axios.post('http://localhost:5001/api/admin/login', {
+            const response = await api.post('/api/admin/login', {
                 email,
                 password,
                 key
-            }, { withCredentials: true }); // Include withCredentials to send cookies
+            });
             setButtonState(false);
             if(response.status === 200) {
                 setSendOtp(true);
@@ -37,9 +37,9 @@ const AdminLogin = () => {
         e.preventDefault();
         try {
             setButtonState(true);
-            const otpResponse = await axios.post('http://localhost:5001/api/admin/verify-otp', {
+            const otpResponse = await api.post('/api/admin/verify-otp', {
                 otp
-            }, {withCredentials: true});
+            });
             setButtonState(false);
             // Ensure the response includes the admin's first name
             if (otpResponse.data.admin && otpResponse.data.admin.firstName) {

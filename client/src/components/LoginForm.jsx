@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../api/axios';
 import { useNavigate } from 'react-router-dom';
 
-const api = axios.create({
-  baseURL: "http://localhost:5001/api/auth",
-  withCredentials: true,
-});
+// const api = axios.create({
+//   baseURL: "http://localhost:5001/api/auth",
+//   withCredentials: true,
+// });
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -18,12 +18,12 @@ const Login = () => {
         setErrorMessage('');
 
         try {
-            const response = await api.post('/login', { email, password });
+            const response = await api.post('/api/auth/login', { email, password });
             localStorage.setItem('email', email);
             localStorage.setItem('firstName', response.data.firstName);
 
             if (response.data.redirect) {
-                const userCheckResponse = await api.get(`/check-user/${email}`);
+                const userCheckResponse = await api.get(`/api/auth/check-user/${email}`);
                 if (userCheckResponse.data.isLender) {
                     navigate('/lender-dashboard');
                 } else if (userCheckResponse.data.isBorrower) {
