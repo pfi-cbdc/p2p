@@ -20,8 +20,11 @@ function Root() {
   const isAdminRoute = location.pathname.startsWith('/admin-pfi-2406');
 
   useEffect(() => {
-    // Tawk.to Script
-    var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+    // eslint-disable-next-line no-unused-vars
+    var Tawk_LoadStart = new Date();
+    // eslint-disable-next-line no-use-before-define
+    var Tawk_API = Tawk_API || {};
+    
     (function() {
       var s1 = document.createElement("script");
       s1.async = true;
