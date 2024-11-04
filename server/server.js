@@ -52,7 +52,7 @@ app.use(
     sameSite: 'none'
   })
 );
-
+app.set('trust proxy', 1);
 // Configure express-rate-limiter
 const rateLimitMiddleware = setRateLimit({
   windowMs: 60 * 1000, // 1 minute
