@@ -9,13 +9,13 @@ const Navbar = () => {
     const handleLogout = async () => {
         try {
             await api.post('/api/auth/logout');
-            localStorage.removeItem('firstName'); // Clear user info from local storage
+            localStorage.clear(); // Clear user info from local storage
             navigate('/'); // Redirect to homepage after logout
         } catch (error) {
             console.error('Logout error:', error);
             if (error.response && error.response.status === 400) {
                 // Clear local storage if session is invalid
-                localStorage.removeItem('firstName');
+                localStorage.clear();
                 navigate('/login');
             }
         }

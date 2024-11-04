@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import api from '../api/axios';
 import { useNavigate } from 'react-router-dom';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 // const api = axios.create({
 //   baseURL: "http://localhost:5001/api/auth",
@@ -12,6 +13,11 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
+    const [showPassword, setShowPassword] = useState(true); // Password eye
+
+    //Regex Implementation
+    const [isEmailValid, setIsEmailValid] = useState(true);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -37,6 +43,11 @@ const Login = () => {
         }
     };
 
+    // Eye Button handler on password box
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
             <div className="w-full max-w-md p-8 space-y-6 bg-white shadow-lg rounded-lg">
@@ -51,21 +62,34 @@ const Login = () => {
                             type="email"
                             id="email"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e) => {
+                                setEmail(e.target.value)
+                                setIsEmailValid(emailRegex.test(e.target.value));
+                            }}
                             className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
                             required
                         />
+                        {!isEmailValid && (
+                            <p className="text-red-500 text-sm mt-1">Please enter a valid email address.</p>
+                        )}
                     </div>
-                    <div>
+                    <div className='relative'>
                         <label htmlFor="password" className="block text-lg font-medium text-gray-700">Password</label>
                         <input
-                            type="password"
+                            type={showPassword ? "password" : "text"}
                             id="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                            className="w-full px-4 py-2 pr-10 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
                             required
                         />
+                        <button
+                            type="button"
+                            onClick={togglePasswordVisibility}
+                            className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500"
+                        >
+                        {showPassword ? <FaEyeSlash /> : <FaEye />}
+                        </button>
                     </div>
                     <button
                         type="submit"

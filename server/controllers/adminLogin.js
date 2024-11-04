@@ -95,18 +95,24 @@ exports.verifyOTP = async (req, res) => {
 }
 
 exports.logoutAdmin = async (req, res) => {
-    if (req.session.admin) {
-        req.session.destroy((err) => {
-          if (err) {
-            console.error("Error destroying session:", err.message);
-            return res.status(500).json({ error: "Error logging out" });
+    try {
+        if (req.session.admin) {
+            // req.session.destroy((err) => {
+            //   if (err) {
+            //     console.error("Error destroying session:", err.message);
+            //     return res.status(500).json({ error: "Error logging out" });
+            //   }
+            req.session = null;
+            res.clearCookie("connect.sid");
+            return res.status(200).json({ message: "Logged out successfully" });
+            // });
+          } else {
+            return res.status(400).json({ message: "No admin is logged in" });
           }
-          res.clearCookie("connect.sid");
-          return res.status(200).json({ message: "Logged out successfully" });
-        });
-      } else {
-        return res.status(400).json({ message: "No admin is logged in" });
-      }
+    }
+    catch(err) {
+        return res.status(400).json({message: "Error logging out"});
+    }
 }
 
 // exports.addAdmin = async (req, res) => {
