@@ -43,8 +43,9 @@ const Registration = () => {
       localStorage.setItem('firstName', formData.firstName);
       localStorage.setItem('email', formData.email);
       setMessage(response.data.message);
-      
-      await api.post("/api/auth/send-otp", { email: formData.email });
+      if(response.status !== 200 && response.status !== 400) {
+        await api.post("/api/auth/send-otp", { email: formData.email });
+      }
       setOtpSent(true);
     } catch (error) {
       setMessage(error.response?.data?.message || "Error during registration");
