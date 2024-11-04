@@ -1,5 +1,5 @@
 const express = require("express");
-const session = require("express-session");
+const cookieSession = require("cookie-session");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const multer = require("multer");
@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 5001;
 // Middleware
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000", "https://pfi-test.netlify.app"],
     credentials: true,
   })
 );
@@ -31,20 +31,30 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 // Configure express-session
+// app.use(
+//   session({
+//     store: new session.MemoryStore(), // This will clear sessions on server restart
+//     secret: "secret",
+//     resave: false,
+//     saveUninitialized: true,
+//     rolling: false, // Refresh session expiration on every request
+//     cookie: {
+//       secure: false, // Set to true if using HTTPS
+//       maxAge: 30 * 60 * 1000, // Session expires after 30 minutes of inactivity
+//     },
+//   })
+// );
 app.use(
-  session({
-    store: new session.MemoryStore(), // This will clear sessions on server restart
-    secret: "secret",
-    resave: false,
-    saveUninitialized: true,
-    rolling: false, // Refresh session expiration on every request
-    cookie: {
-      secure: false, // Set to true if using HTTPS
-      maxAge: 30 * 60 * 1000, // Session expires after 30 minutes of inactivity
-    },
+  cookieSession({
+    name: "session", // The name of the cookie
+    secret: "secret", // Replace with your secret for encrypting the cookie
+    maxAge: 30 * 60 * 1000, // Session expires after 30 minutes of inactivity
+    httpOnly: true, // Prevents XXS attacks
+    secure: true, // Set to true if using HTTPS
+    sameSite: 'none'
   })
 );
-
+app.set('trust proxy', 1);
 // Configure express-rate-limiter
 const rateLimitMiddleware = setRateLimit({
   windowMs: 60 * 1000, // 1 minute

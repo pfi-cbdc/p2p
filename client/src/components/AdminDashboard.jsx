@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api/axios';
 
 const AdminDashboard = () => {
     const [view, setView] = useState('');
@@ -9,7 +9,7 @@ const AdminDashboard = () => {
     useEffect(() => {
         const fetchDetails = async () => {
             try {
-                const res = await axios.post('http://localhost:5001/api/admin/dashboard', {}, { withCredentials: true });
+                const res = await api.post('/api/admin/dashboard');
                 setResponse(res.data);
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -88,9 +88,7 @@ const AdminDashboard = () => {
     //users ka sara kuch
     const fetchUsers = async () => {
        try{
-            const res = await axios.get('http://localhost:5001/api/users/all', {
-                withCredentials: true
-            });
+            const res = await api.get('/api/users/all');
             if(res.status === 200){
                 setResponse(prev => ({ ...prev, users: res.data}))
             }
@@ -133,7 +131,7 @@ const AdminDashboard = () => {
     /* invoices fetch krne wala kaam*/
        const fetchInvoices = async () => {
         try {
-            const res = await axios.get('http://localhost:5001/api/invoices/all', { withCredentials: true });
+            const res = await api.get('/api/invoices/all');
             if (res.status === 200) {
                 setResponse(prev => ({ ...prev, invoices: res.data }));
             }
@@ -192,7 +190,7 @@ const AdminDashboard = () => {
     //borrowers ka maa baap
     const fetchBorrowers = async () => {
         try {
-            const res = await axios.get('http://localhost:5001/api/borrower/all', { withCredentials: true });
+            const res = await api.get('/api/borrower/all');
             if (res.status === 200) {
                 setResponse(prev => ({ ...prev, borrowers: res.data }));
             }
@@ -330,7 +328,7 @@ const renderInvestments = () => {
 
     const handleLogout = async () => {
         try {
-            await axios.post('http://localhost:5001/api/admin/logout', {}, { withCredentials: true });
+            await api.post('http://localhost:5001/api/admin/logout');
             window.location.href = '/login';
         } catch (error) {
             console.error("Error logging out:", error);

@@ -1,6 +1,6 @@
 // client/src/components/InvoiceForm.js
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../api/axios';
 import FileUpload from './FileUpload'; // Import the FileUpload component
 import { useNavigate } from "react-router-dom";
 
@@ -41,7 +41,7 @@ const InvoiceForm = () => {
           setButtonDisabled(false);
           navigate(-1);
       };
-      const res = await axios.get(`http://localhost:5001/api/borrower/status?email=${email}`);
+      const res = await api.get(`/api/borrower/status?email=${email}`);
       if(!res) {
           alert('There has been a misunderstanding. Please try again later');
           setButtonDisabled(false);
@@ -63,7 +63,7 @@ const InvoiceForm = () => {
   
         // console.log([...formDataToSend]); // This will log the FormData entries
   
-        const response = await axios.post('http://localhost:5001/api/invoice', formDataToSend, {
+        const response = await api.post('/api/invoice', formDataToSend, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },

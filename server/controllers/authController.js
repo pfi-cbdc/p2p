@@ -165,17 +165,22 @@ exports.loginUser = async (req, res) => {
 
 // Logout User
 exports.logoutUser = (req, res) => {
-  if (req.session.user) {
-    req.session.destroy((err) => {
-      if (err) {
-        console.error("Error destroying session:", err.message);
-        return res.status(500).json({ error: "Error logging out" });
-      }
+  try {
+    if (req.session.user) {
+      // req.session.destroy((err) => {
+      //   if (err) {
+      //     console.error("Error destroying session:", err.message);
+      //     return res.status(500).json({ error: "Error logging out" });
+      //   }
+      req.session = null;
       res.clearCookie("connect.sid");
       return res.status(200).json({ message: "Logged out successfully" });
-    });
-  } else {
-    return res.status(400).json({ message: "No user is logged in" });
+      // });
+    } else {
+      return res.status(400).json({ message: "No user is logged in" });
+    }
+  } catch(err) {
+    res.status(400).json({message: "Error Logging out"});
   }
 };
 

@@ -1,21 +1,21 @@
 // client/src/components/Navbar.js
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api/axios';
 
 const Navbar = () => {
     const navigate = useNavigate();
     
     const handleLogout = async () => {
         try {
-            await axios.post('http://localhost:5001/api/auth/logout', {}, { withCredentials: true });
-            localStorage.removeItem('firstName'); // Clear user info from local storage
+            await api.post('/api/auth/logout');
+            localStorage.clear(); // Clear user info from local storage
             navigate('/'); // Redirect to homepage after logout
         } catch (error) {
             console.error('Logout error:', error);
             if (error.response && error.response.status === 400) {
                 // Clear local storage if session is invalid
-                localStorage.removeItem('firstName');
+                localStorage.clear();
                 navigate('/login');
             }
         }

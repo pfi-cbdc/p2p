@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import UnauthorizedAccess from './UnauthorizedAccess'
+import api from '../api/axios';
 
 const AdminProtectedRoute = ({ children }) => {
     const [isAdmin, setIsAdmin] = useState(null);
@@ -9,7 +9,7 @@ const AdminProtectedRoute = ({ children }) => {
     useEffect(() => {
         const checkAdminStatus = async () => {
             try {
-                const response = await axios.post('http://localhost:5001/api/admin/me', {}, { withCredentials: true });
+                const response = await api.post('/api/admin/me');
                 if (response.status === 200) {
                     setIsAdmin(true);
                 } else {
@@ -43,7 +43,7 @@ export const AdminLoginProtection = ({children}) => {
     useEffect(() => {
         const checkAdminStatus = async () => {
             try {
-                const response = await axios.post('http://localhost:5001/api/admin/verify-user', {}, { withCredentials: true });
+                const response = await api.post('/api/admin/verify-user');
                 if (response.status === 200) {
                     setIsAdmin(true);
                 } else {

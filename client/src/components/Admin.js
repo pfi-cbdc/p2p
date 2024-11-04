@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; // Use useNavigate for routing
+import api from '../api/axios';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const AdminLogin = () => {
     const [email, setEmail] = useState('');
@@ -9,6 +10,12 @@ const AdminLogin = () => {
     const [otp, setOtp] = useState('');
     const [sendOtp, setSendOtp] = useState(false);
     const [buttonState, setButtonState] = useState(false);
+    const [showPassword, setShowPassword] = useState(true); // Password eye
+    const [showSecret, setShowSecret] = useState(true); // Secret eye
+
+    //Regex Implementation
+    const [isEmailValid, setIsEmailValid] = useState(true);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     const navigate = useNavigate(); // Initialize useNavigate
 
@@ -16,11 +23,11 @@ const AdminLogin = () => {
         e.preventDefault();
         try {
             setButtonState(true);
-            const response = await axios.post('http://localhost:5001/api/admin/login', {
+            const response = await api.post('/api/admin/login', {
                 email,
                 password,
                 key
-            }, { withCredentials: true }); // Include withCredentials to send cookies
+            });
             setButtonState(false);
             if(response.status === 200) {
                 setSendOtp(true);
@@ -37,9 +44,9 @@ const AdminLogin = () => {
         e.preventDefault();
         try {
             setButtonState(true);
-            const otpResponse = await axios.post('http://localhost:5001/api/admin/verify-otp', {
+            const otpResponse = await api.post('/api/admin/verify-otp', {
                 otp
-            }, {withCredentials: true});
+            });
             setButtonState(false);
             // Ensure the response includes the admin's first name
             if (otpResponse.data.admin && otpResponse.data.admin.firstName) {
@@ -56,6 +63,14 @@ const AdminLogin = () => {
         }
     };
 
+    // Eye Button handler on password and secret box
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
+    const toggleSecretVisibility = () => {
+        setShowSecret(!showSecret);
+    };
+
     return (
         <div className="flex flex-col items-center justify-center min-h-screen">
             <h2 className="text-2xl font-bold mb-4">Admin Login</h2>
@@ -68,32 +83,52 @@ const AdminLogin = () => {
                             type="email"
                             id="email"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e) => {
+                                setEmail(e.target.value)
+                                setIsEmailValid(emailRegex.test(e.target.value));
+                            }}
                             className="mt-1 p-2 border border-gray-300 rounded-md w-full"
                             required
                         />
+                        {!isEmailValid && (
+                            <p className="text-red-500 text-sm mt-1">Please enter a valid email address.</p>
+                        )}
                     </div>
-                    <div className="mb-4">
+                    <div className="mb-4 relative">
                         <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
                         <input
-                            type="password"
+                            type={showPassword ? "password" : "text"}
                             id="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             className="mt-1 p-2 border border-gray-300 rounded-md w-full"
                             required
                         />
+                        <button
+                            type="button"
+                            onClick={togglePasswordVisibility}
+                            className="absolute inset-y-0 right-0 flex items-center pr-3"
+                        >
+                        {showPassword ? <FaEyeSlash /> : <FaEye />}
+                        </button>
                     </div>
-                    <div className="mb-4">
+                    <div className="mb-4 relative">
                         <label htmlFor="Secret Key" className="block text-sm font-medium text-gray-700">Secret Key</label>
                         <input
-                            type="password"
+                            type={showSecret ? "password" : "text"}
                             id="secret"
                             value={key}
                             onChange={(e) => setKey(e.target.value)}
                             className="mt-1 p-2 border border-gray-300 rounded-md w-full"
                             required
                         />
+                        <button
+                            type="button"
+                            onClick={toggleSecretVisibility}
+                            className="absolute inset-y-0 right-0 flex items-center pr-3"
+                        >
+                        {showSecret ? <FaEyeSlash /> : <FaEye />}
+                        </button>
                     </div>
                     <button
                         type="submit"

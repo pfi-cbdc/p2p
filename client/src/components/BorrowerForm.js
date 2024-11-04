@@ -1,8 +1,8 @@
 // client/src/components/BorrowerForm.js
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import FileUpload from './FileUpload'; // Import the FileUpload component
+import api from '../api/axios';
 
 const BorrowerForm = () => {
     const [formData, setFormData] = useState({
@@ -37,7 +37,7 @@ const BorrowerForm = () => {
             }
         }
         try {
-            const response = await axios.post('http://localhost:5001/api/borrower', formDataToSend, {
+            const response = await api.post('/api/borrower', formDataToSend, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

@@ -1,8 +1,9 @@
 import axios from 'axios';
 
+
 const api = axios.create({
-  baseURL: 'http://localhost:5001', // Adjust to your server's URL
-  withCredentials: true, // Enable session handling
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5001',
+  withCredentials: true,
 });
 
 export default api;
