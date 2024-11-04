@@ -33,7 +33,7 @@ const Invest = () => {
           return; // Ensure to return after navigating
       }
 
-      const res = await axios.get(`http://localhost:5001/api/lender/status?email=${email}`);
+      const res = await api.get(`/api/lender/status?email=${email}`);
       if (!res) {
           alert('There has been a misunderstanding. Please try again later');
           setButtonDisabled(false);
@@ -48,7 +48,7 @@ const Invest = () => {
           return; // Ensure to return after navigating
       } else {
 
-        const response = await axios.post('http://localhost:5001/api/investment', {
+        const response = await api.post('/api/investment', {
             amount: formData.amount,
             tenure: formData.tenure,
             monthlyEarnings: formData.monthlyEarnings,
@@ -68,11 +68,7 @@ const Invest = () => {
     } finally {
         setButtonDisabled(false);
     }
-  };
-
-       
-           
-    
+    };
 
     return (
         <div className="bg-white shadow-lg p-6 rounded-lg">

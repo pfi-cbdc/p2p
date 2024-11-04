@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FileUpload from './FileUpload';
+import api from '../api/axios';
 
 const LenderForm = ({ email }) => {
     const [formData, setFormData] = useState({
@@ -36,7 +37,7 @@ const LenderForm = ({ email }) => {
             }
         }
         try {
-            const response = await axios.post('http://localhost:5001/api/lender', formDataToSend, {
+            const response = await api.post('/api/lender', formDataToSend, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

@@ -20,12 +20,10 @@ const AdminDashboard = () => {
         fetchDetails();
     }, []);
 
-
-
     //lenders ka sara kaam
     const fetchLenders = async () => {
         try {
-            const res = await axios.get('http://localhost:5001/api/lender/all', { withCredentials: true });
+            const res = await api.get('/api/lender/all');
             if (res.status === 200) {
                 setResponse(prev => ({ ...prev, borrowers: res.data }));
             }
@@ -253,7 +251,7 @@ const AdminDashboard = () => {
 //investments ka maai baap
  const fetchInvestments = async () => {
     try {
-        const res = await axios.get('http://localhost:5001/api/investments/all', { withCredentials: true });
+        const res = await api.get('/api/investments/all');
         if (res.status === 200) {
             setResponse(prev => ({ ...prev, investments: res.data }));
         }
@@ -328,7 +326,8 @@ const renderInvestments = () => {
 
     const handleLogout = async () => {
         try {
-            await api.post('http://localhost:5001/api/admin/logout');
+            await api.post('/api/admin/logout');
+            localStorage.clear();
             window.location.href = '/login';
         } catch (error) {
             console.error("Error logging out:", error);
