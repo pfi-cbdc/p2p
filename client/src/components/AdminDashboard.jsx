@@ -25,7 +25,7 @@ const AdminDashboard = () => {
         try {
             const res = await api.get('/api/lender/all');
             if (res.status === 200) {
-                setResponse(prev => ({ ...prev, borrowers: res.data }));
+                setResponse(prev => ({ ...prev, lenders: res.data }));
             }
         } catch (error) {
             console.error("Error fetching lenders:", error);

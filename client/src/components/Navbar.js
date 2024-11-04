@@ -29,7 +29,7 @@ const Navbar = () => {
         <nav className="bg-white shadow-md">
             <div className="container mx-auto flex justify-between items-center p-4">
                 <div className="flex items-center">
-                    <div className="text-2xl font-bold text-red-600">PFI</div>
+                    <Link to="/" className="text-2xl font-bold text-red-600">PFI</Link>
                 </div>
                 <div className="flex space-x-4">
                     {isLoggedIn ? (

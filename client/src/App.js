@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './components/Home'; // Import Home component
@@ -18,6 +18,20 @@ import AdminProtectedRoute, { AdminLoginProtection } from './components/AdminPro
 function Root() {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin-pfi-2406');
+
+  useEffect(() => {
+    // Tawk.to Script
+    var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+    (function() {
+      var s1 = document.createElement("script");
+      s1.async = true;
+      s1.src = 'https://embed.tawk.to/6728e6bc4304e3196adce996/1ibrsakqa';
+      s1.charset = 'UTF-8';
+      s1.setAttribute('crossorigin', '*');
+      var s0 = document.getElementsByTagName("script")[0];
+      s0.parentNode.insertBefore(s1, s0);
+    })();
+  }, []);
 
   return (
     <div className="App">
