@@ -36,6 +36,7 @@ const LenderForm = ({ email }) => {
                 formDataToSend.append(key, formData[key]);
             }
         }
+        console.log([...formDataToSend]); // This will log the FormData entries
         try {
             const response = await api.post('/api/lender', formDataToSend, {
                 headers: {

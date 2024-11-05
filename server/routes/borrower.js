@@ -1,20 +1,13 @@
-// server/routes/borrower.js
 const express = require('express');
 const router = express.Router();
 const Borrower = require('../models/Borrower');
 const cloudinary = require('../utils/cloudinaryConfig');
 const multer = require('multer');
+const { Readable } = require('stream');
 
-// Configure Multer for multiple file uploads
-// const storage = multer.diskStorage({
-//     destination: (req, file, cb) => {
-//         cb(null, 'uploads/');
-//     },
-//     filename: (req, file, cb) => {
-//         cb(null, Date.now() + '-' + file.originalname);
-//     }
-// });
-const upload = multer();
+// Configure Multer for memory storage
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 // POST route to create a new borrower with file uploads
 router.post('/', upload.fields([{ name: 'aadharCard', maxCount: 1 }, { name: 'panCard', maxCount: 1 }, { name: 'accountStatement', maxCount: 1 }]), async (req, res) => {
@@ -25,15 +18,27 @@ router.post('/', upload.fields([{ name: 'aadharCard', maxCount: 1 }, { name: 'pa
             accountStatement: []
         };
 
+        // Upload each file to Cloudinary
         for (const field of ['aadharCard', 'panCard', 'accountStatement']) {
             if (req.files[field]) {
                 for (const file of req.files[field]) {
-                    const result = await cloudinary.uploader.upload(file.path, { folder: 'pfi' });
+                    const stream = Readable.from(file.buffer); // Convert buffer to stream
+                    const result = await new Promise((resolve, reject) => {
+                        const uploadStream = cloudinary.uploader.upload_stream(
+                            { folder: 'pfi' },
+                            (error, result) => {
+                                if (error) return reject(error);
+                                resolve(result);
+                            }
+                        );
+                        stream.pipe(uploadStream);
+                    });
                     uploadedFiles[field].push(result.secure_url);
                 }
             }
         }
 
+        // Create a new borrower entry in the database
         const newBorrower = new Borrower({
             firstName: req.body.firstName || localStorage.getItem('firstName'),
             aadharCard: uploadedFiles.aadharCard,
@@ -49,11 +54,10 @@ router.post('/', upload.fields([{ name: 'aadharCard', maxCount: 1 }, { name: 'pa
         await newBorrower.save();
         res.status(201).json({ message: 'Borrower created successfully', borrower: newBorrower });
     } catch (error) {
+        console.error('Error creating borrower:', error);
         res.status(400).json({ message: 'Error creating borrower', error });
     }
 });
-
-module.exports = router;
 
 // Route to check borrower status
 router.get('/status', async (req, res) => {
@@ -70,8 +74,7 @@ router.get('/status', async (req, res) => {
     }
 });
 
-
-// Fetch all invoices for admin dashboard
+// Fetch all borrowers for admin dashboard
 router.get('/all', async (req, res) => {
     try {
         const borrowers = await Borrower.find();
@@ -81,3 +84,5 @@ router.get('/all', async (req, res) => {
         res.status(400).json({ message: 'Error fetching borrowers', error });
     }
 });
+
+module.exports = router;
