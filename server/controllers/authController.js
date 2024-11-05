@@ -173,7 +173,7 @@ exports.logoutUser = (req, res) => {
       //     return res.status(500).json({ error: "Error logging out" });
       //   }
       req.session = null;
-      res.clearCookie("connect.sid");
+      res.clearCookie();
       return res.status(200).json({ message: "Logged out successfully" });
       // });
     } else {

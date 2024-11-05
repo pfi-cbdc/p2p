@@ -103,6 +103,10 @@ const Login = () => {
                     Don’t have an account? 
                     <a href="/register" className="text-blue-500 hover:underline"> Register here</a>
                 </p>
+                <p className="text-center text-gray-600">
+                    Forgot password? 
+                    <a href="/reset-pass" className="text-blue-500 hover:underline">reset</a>
+                </p>
             </div>
         </div>
     );
