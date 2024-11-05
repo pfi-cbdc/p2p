@@ -5,7 +5,7 @@ const Investment = require('../models/Investment');
 
 
 router.post('/', async(req, res) => {
-    console.log(req.body); // Log the incoming data
+    // console.log(req.body); // Log the incoming data
     try {
         const newInvestment = new Investment({
             amount: req.body.amount,
