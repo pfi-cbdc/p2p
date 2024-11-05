@@ -9,7 +9,8 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-exports.sendOtpToEmail = async (email, otp) => {
+// Function to send OTP to email
+const sendOtpToMail = async (email, otp) => {
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: email,
@@ -18,11 +19,16 @@ exports.sendOtpToEmail = async (email, otp) => {
     };
 
     try {
+        console.log(`Sending OTP to: ${email}`); // Debug log
         await transporter.sendMail(mailOptions);
-        console.log('OTP sent to email');
+        console.log('OTP sent to email successfully'); // Debug log
     } catch (error) {
-        console.error('Error sending OTP email', error);
+        console.error('Error sending OTP email:', error); // Improved error logging
     }
 };
 
-module.exports = transporter;
+// Export both transporter and sendOtpToMail
+module.exports = {
+    transporter,
+    sendOtpToMail,
+};
