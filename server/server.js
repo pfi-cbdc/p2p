@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 5001;
 // Middleware
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://pfi-test.netlify.app"],
+    origin: ["http://localhost:3000", "https://chic-marigold-cdd8e6.netlify.app/"],
     credentials: true,
   })
 );
