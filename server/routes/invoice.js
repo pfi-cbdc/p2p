@@ -3,24 +3,31 @@ const router = express.Router();
 const Invoice = require('../models/invoice');
 const cloudinary = require('../utils/cloudinaryConfig');
 const multer = require('multer');
+const { Readable } = require('stream');
 
-// Configure Multer
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/');
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + '-' + file.originalname);
-    }
-});
+// Configure Multer to use memory storage
+const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 // Upload invoice and file to Cloudinary
-router.post('/', upload.single('fileUpload'), async(req, res) => {
-    // console.log(req.file); // Log the uploaded file
-    // console.log(req.body); // Log the other form fields
+router.post('/', upload.single('fileUpload'), async (req, res) => {
     try {
-        const result = await cloudinary.uploader.upload(req.file.path, { folder: 'pfi' });
+        // Convert file buffer to readable stream
+        const stream = Readable.from(req.file.buffer);
+
+        // Upload file to Cloudinary
+        const result = await new Promise((resolve, reject) => {
+            const uploadStream = cloudinary.uploader.upload_stream(
+                { folder: 'pfi' },
+                (error, result) => {
+                    if (error) return reject(error);
+                    resolve(result);
+                }
+            );
+            stream.pipe(uploadStream);
+        });
+
+        // Save invoice details to database
         const newInvoice = new Invoice({
             fileUpload: result.secure_url,
             typeOfBusiness: req.body.typeOfBusiness,

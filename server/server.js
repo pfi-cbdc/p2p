@@ -22,7 +22,7 @@ const PORT = process.env.PORT || 5001;
 // Middleware
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://pfi-test.netlify.app"],
+    origin: ["http://localhost:3000", "https://chic-marigold-cdd8e6.netlify.app/"],
     credentials: true,
   })
 );
@@ -65,16 +65,16 @@ const rateLimitMiddleware = setRateLimit({
 });
 
 // Configure Multer to store files in the 'uploads' folder
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads");
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
-});
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, "uploads");
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, Date.now() + path.extname(file.originalname));
+//   },
+// });
 
-const upload = multer({ storage });
+// const upload = multer({storage});
 
 // app.use(upload.single('fileUpload')); // Ensure this is set up to handle file uploads
 
