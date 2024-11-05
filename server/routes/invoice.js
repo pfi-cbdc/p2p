@@ -5,15 +5,15 @@ const cloudinary = require('../utils/cloudinaryConfig');
 const multer = require('multer');
 
 // Configure Multer
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/');
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + '-' + file.originalname);
-    }
-});
-const upload = multer({ storage });
+// const storage = multer.diskStorage({
+//     destination: (req, file, cb) => {
+//         cb(null, 'uploads/');
+//     },
+//     filename: (req, file, cb) => {
+//         cb(null, Date.now() + '-' + file.originalname);
+//     }
+// });
+const upload = multer();
 
 // Upload invoice and file to Cloudinary
 router.post('/', upload.single('fileUpload'), async(req, res) => {

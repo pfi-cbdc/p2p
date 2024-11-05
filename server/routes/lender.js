@@ -5,15 +5,15 @@ const Lender = require('../models/Lender');
 const cloudinary = require('../utils/cloudinaryConfig');
 const multer = require('multer');
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/');
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + '-' + file.originalname);
-    }
-});
-const upload = multer({ storage });
+// const storage = multer.diskStorage({
+//     destination: (req, file, cb) => {
+//         cb(null, 'uploads/');
+//     },
+//     filename: (req, file, cb) => {
+//         cb(null, Date.now() + '-' + file.originalname);
+//     }
+// });
+const upload = multer();
 
 // POST route to create a new lender
 router.post('/', upload.fields([{ name: 'aadharCard', maxCount: 1 }, { name: 'panCard', maxCount: 1 }, { name: 'accountStatement', maxCount: 1 }]), async (req, res) => {

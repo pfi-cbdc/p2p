@@ -49,9 +49,9 @@ app.use(
     name: "session", // The name of the cookie
     secret: "secret", // Replace with your secret for encrypting the cookie
     maxAge: 30 * 60 * 1000, // Session expires after 30 minutes of inactivity
-    // httpOnly: true, // Prevents XXS attacks
-    secure: false, // Set to true if using HTTPS
-    // sameSite: 'none'
+    httpOnly: true, // Prevents XXS attacks
+    secure: true, // Set to true if using HTTPS
+    sameSite: 'none'
   })
 );
 app.set('trust proxy', 1);
@@ -64,16 +64,16 @@ const rateLimitMiddleware = setRateLimit({
 });
 
 // Configure Multer to store files in the 'uploads' folder
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads");
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
-});
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, "uploads");
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, Date.now() + path.extname(file.originalname));
+//   },
+// });
 
-const upload = multer({ storage });
+const upload = multer();
 
 // app.use(upload.single('fileUpload')); // Ensure this is set up to handle file uploads
 
