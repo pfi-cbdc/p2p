@@ -13,7 +13,9 @@ import ProtectedRoute from './components/ProtectedRoute'; // Import ProtectedRou
 import './App.css';
 import AdminLogin from './components/Admin.js';
 import AdminDashboard from './components/AdminDashboard.jsx';
+import ResetPassword from './components/ResetPassword.js';
 import AdminProtectedRoute, { AdminLoginProtection } from './components/AdminProtectedRoute.js';
+import ResetMailPassword from './components/ResetMailPassword.js';
 
 function Root() {
   const location = useLocation();
@@ -45,6 +47,8 @@ function Root() {
           <Route path="/role" element={<RoleSelector />} />
           <Route path="/register" element={<Registration />} />
           <Route path="/login" element={<Login />} /> 
+          <Route path="/reset-pass" element={<ResetPassword />} /> 
+          <Route path="/reset-password" element={<ResetMailPassword />} /> 
           <Route 
             path="/lender" 
             element={

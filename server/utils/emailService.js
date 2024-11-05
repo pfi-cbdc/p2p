@@ -24,3 +24,5 @@ exports.sendOtpToEmail = async (email, otp) => {
         console.error('Error sending OTP email', error);
     }
 };
+
+module.exports = transporter;
