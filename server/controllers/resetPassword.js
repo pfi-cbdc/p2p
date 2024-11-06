@@ -2,9 +2,8 @@ const ResetPassword = require('../models/ResetPassword');
 const User = require('../models/User');
 const crypto = require("crypto");
 const bcrypt = require("bcrypt");
-const transporter = require('../utils/emailService');
+const { transporter } = require('../utils/emailService.js');
 const url = `http://localhost:3000`; // devlopment
-// const url = "https://pfi-test.netlify.app"; // production
 
 module.exports.resetPasswordHandler = async function (req, res) {
     try {
