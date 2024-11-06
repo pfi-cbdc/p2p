@@ -65,9 +65,9 @@ router.get('/status', async (req, res) => {
     try {
         const borrower = await Borrower.findOne({ email });
         if (borrower) {
-            return res.status(200).json({ exists: true });
+            return res.status(200).json({ exists: true, verified: borrower.verified });
         }
-        return res.status(200).json({ exists: false });
+        return res.status(200).json({ exists: false, verified: 3 }); // 3 - does not exist
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Error checking borrower status', error: error.message });
@@ -84,5 +84,16 @@ router.get('/all', async (req, res) => {
         res.status(400).json({ message: 'Error fetching borrowers', error });
     }
 });
+
+router.put('/update', async (req, res) => {
+    const {id, stat} = req.body;
+    console.log(id);
+    console.log(stat);
+    const invoice = await Borrower.findByIdAndUpdate(id, {$set: {verified: Number(stat)}});
+    if(!invoice) {
+        return res.status(400).json({message: "Error during update"});
+    }
+    return res.status(200).json({message: "All set!"});
+  });
 
 module.exports = router;

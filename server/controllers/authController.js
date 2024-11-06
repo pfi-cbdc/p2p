@@ -1,7 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const { generateOtp } = require("../utils/otpGenerator");
-const { sendOtpToEmail } = require("../utils/emailService");
+const { sendOtpToMail } = require("../utils/emailService");
 const Lender = require('../models/Lender');
 const Borrower = require('../models/Borrower');
 
@@ -49,7 +49,7 @@ exports.registerUser = async (req, res) => {
     req.session.tempUser = tempUser;
 
     // Send OTP email
-    await sendOtpToEmail(email, otp);
+    await sendOtpToMail(email, otp);
 
     res.status(200).json({ message: "OTP sent to your email. Please verify." });
   } catch (error) {
@@ -195,7 +195,7 @@ exports.sendOtp = async (req, res) => {
     await User.updateOne({ email }, { otp, otpExpiration: expiration });
 
     // Send OTP email using the email service
-    await sendOtpToEmail(email, otp);
+    await sendOtpToMail(email, otp);
 
     res.status(200).json({ message: "OTP sent successfully" });
   } catch (error) {

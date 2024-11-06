@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const Admin = require('../models/Admin');
 const { generateOtp } = require('../utils/otpGenerator');
-const { sendOtpToEmail } = require('../utils/emailService');
+const { sendOtpToMail } = require('../utils/emailService');
 
 const date = new Date();
 const OTP_EXPIRE_TIME = 300000;
@@ -44,7 +44,7 @@ exports.loginAdmin = async (req, res) => {
         }
         req.session.tempAdmin = tempAdmin;
 
-        sendOtpToEmail(email, otp);
+        sendOtpToMail(email, otp);
 
         return res.status(200).json({
             message: "Admin Logged in.",

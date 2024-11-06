@@ -40,8 +40,6 @@ const Registration = () => {
     if (otpSent) return;
     try {
       const response = await api.post("/api/auth/register", formData);
-      localStorage.setItem('firstName', formData.firstName);
-      localStorage.setItem('email', formData.email);
       setMessage(response.data.message);
       if(response.status !== 200 && response.status !== 400) {
         await api.post("/api/auth/send-otp", { email: formData.email });
@@ -58,6 +56,8 @@ const Registration = () => {
       const response = await api.post("/api/auth/verify-otp", { otp });
       setMessage(response.data.message);
       if (response.status === 200) {
+        localStorage.setItem('firstName', formData.firstName);
+        localStorage.setItem('email', formData.email);
         window.location.href = "/role";
       }
     } catch (error) {

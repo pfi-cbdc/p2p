@@ -23,7 +23,7 @@ const ResetPassword = () => {
                 navigate('/login');
             }
         } catch (error) {
-            setErrorMessage(error.response?.data?.message || 'Error during login');
+            setErrorMessage("Hmm... Looks like something isn't right. Care to try again later?");
         }
     };
    return (

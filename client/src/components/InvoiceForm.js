@@ -52,6 +52,18 @@ const InvoiceForm = () => {
           setButtonDisabled(false);
           navigate('/borrower');
       } else {
+        if(res.data.verified === 2) {
+          alert('You are NOT authorized to generate an INVOICE');
+          setButtonDisabled(false);
+          navigate('/borrower-dashboard');
+          return;
+        }
+        if(res.data.verified === 0) {
+          alert('Please wait while we verify your KYC');
+          setButtonDisabled(false);
+          navigate('/borrower-dashboard');
+          return;
+        }
         // Create FormData object to send file + form data
         const formDataToSend = new FormData();
         formDataToSend.append('fileUpload', formData.fileUpload);  // Append the file
