@@ -26,10 +26,10 @@ const Navbar = () => {
     const isLoggedIn = localStorage.getItem('firstName') !== null;
 
     return (
-        <nav className="bg-white shadow-md">
-            <div className="container mx-auto flex justify-between items-center p-4">
+        <nav className="bg-[#FCFCFC]  shadow-md">
+            <div className="container mx-auto flex justify-between items-center ">
                 <div className="flex items-center">
-                    <Link to="/" className="text-2xl font-bold text-red-600">PFI</Link>
+                    <div className="text-[2.2vw] font-bold text-red-600">PFI</div>
                 </div>
                 <div className="flex space-x-4">
                     {isLoggedIn ? (
@@ -39,10 +39,10 @@ const Navbar = () => {
                             </button>
                         </>
                     ) : (
-                        <>
-                            <Link className="text-blue-600 hover:underline" to="/register">Register</Link>
-                            <Link className="text-blue-600 hover:underline" to="/login">Log In</Link>
-                        </>
+                        <div className='flex gap-[3vw]'>
+                            <Link className="text-black font-semibold text-[1.2vw] hover:underline" to="/register">Register</Link>
+                            <Link className="text-black font-semibold text-[1.2vw] hover:underline" to="/login">Log In</Link>
+                        </div>
                     )}
                 </div>
             </div>
