@@ -1,9 +1,9 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const { generateOtp } = require("../utils/otpGenerator");
-const { sendOtpToMail } = require("../utils/emailService");
 const Lender = require('../models/Lender');
 const Borrower = require('../models/Borrower');
+const { transporter, sendOtpToMail } = require("../utils/emailService");
 
 const OTP_EXPIRE_TIME = 300000; // 5 minutes
 
@@ -49,7 +49,9 @@ exports.registerUser = async (req, res) => {
     req.session.tempUser = tempUser;
 
     // Send OTP email
+    console.log("Sending OTP to:", email);
     await sendOtpToMail(email, otp);
+    console.log("OTP sent successfully");
 
     res.status(200).json({ message: "OTP sent to your email. Please verify." });
   } catch (error) {

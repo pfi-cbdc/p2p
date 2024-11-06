@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const Admin = require('../models/Admin');
 const { generateOtp } = require('../utils/otpGenerator');
-const { sendOtpToMail } = require('../utils/emailService');
+const { transporter, sendOtpToMail } = require("../utils/emailService");
 
 const date = new Date();
 const OTP_EXPIRE_TIME = 300000;

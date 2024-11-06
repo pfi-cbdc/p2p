@@ -71,51 +71,60 @@ const Registration = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white shadow-lg rounded-lg">
-        <h2 className="text-2xl font-bold text-center text-gray-800">Register</h2>
+    <div className="min-h-screen flex items-center justify-center bg-[#FCFCFC][">
+      <div className="left h-screen w-[40vw] ">
+      <div className="element bg-[#F1EFEC] h-[45vw] w-[35vw] ml-[2vw] mt-[1.3vw] rounded-[3vw]">
+      </div>
+      </div>
+      <div className="right h-screen w-[60vw]  ">
+      <div className="w-[30vw] h-[34vw]  ml-[16vw] mt-[7vw] p-8 space-y-6 text-black rounded-[2.5vw]">
+        <h2 className="text-[3vw] font-bold text-center text-black ml-[-17vw]">Register</h2>
+        <hr className="w-[25.5vw] h-[0.15vw] bg-[##949494]" />
         
         {message && <p className="text-center text-red-500">{message}</p>}
 
         {!otpSent ? (
           <form onSubmit={handleRegister} className="space-y-4">
             <div>
-              <label htmlFor="firstName" className="block text-lg font-medium text-gray-700">First Name</label>
+              <label htmlFor="firstName" className="block text-[1vw] mt-[1.5vw]  font-medium text-black">First Name</label>
               <input
                 type="text"
                 name="firstName"
                 id="firstName"
+                placeholder="First Name"
                 value={formData.firstName}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                className="w-[25.5vw] px-4 py-2 border border-gray-300 text-black text-[0.7vw] pt-[0.4vw] pb-[0.4vw] bg-[#F4F4F4] rounded-[0.8vw] focus:outline-none focus:border-blue-500"
                 required
               />
             </div>
             <div>
-              <label htmlFor="lastName" className="block text-lg font-medium text-gray-700">Last Name</label>
+              <label htmlFor="lastName" className="block text-[1vw] mt-[1vw] font-medium text-black">Last Name</label>
               <input
                 type="text"
                 name="lastName"
                 id="lastName"
+                placeholder="Last Name"
                 value={formData.lastName}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                className="w-[25.5vw] px-4 py-2 border border-gray-300 text-black text-[0.7vw] bg-[#F4F4F4] pt-[0.4vw] pb-[0.4vw] rounded-[0.8vw] focus:outline-none focus:border-blue-500"
                 required
               />
             </div>
             <div>
-              <label htmlFor="phone" className="block text-lg font-medium text-gray-700">Phone</label>
+              <label htmlFor="phone" className="block text-[1vw] mt-[1vw] font-medium text-black">Phone</label>
               <input
                 type="text"
                 name="phone"
                 id="phone"
+                placeholder="Phone"
                 value={formData.phone}
                 onChange={(e) => {
                   const value = e.target.value;
                   setFormData({ ...formData, [e.target.name]: e.target.value });
                   setIsPhoneValid(phoneRegex.test(value));
                 }}
-                className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                className="w-[25.5vw] px-4 py-2 border border-gray-300 text-black text-[0.7vw] pt-[0.4vw] pb-[0.4vw] bg-[#F4F4F4] rounded-[0.8vw] focus:outline-none focus:border-blue-500"
                 required
               />
               {!isPhoneValid && (
@@ -123,17 +132,18 @@ const Registration = () => {
               )}
             </div>
             <div>
-              <label htmlFor="email" className="block text-lg font-medium text-gray-700">Email</label>
+              <label htmlFor="email" className="block text-[1vw] mt-[1vw] font-medium text-black">Email</label>
               <input
                 type="email"
                 name="email"
                 id="email"
+                placeholder="Email"
                 value={formData.email}
                 onChange={(e) => {
                   setFormData({ ...formData, [e.target.name]: e.target.value });
                   setIsEmailValid(emailRegex.test(e.target.value));
                 }}
-                className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                className="w-[25.5vw] px-4 py-2 border border-gray-300 text-black text-[0.7vw] pt-[0.4vw] pb-[0.4vw] bg-[#F4F4F4] rounded-[0.8vw] focus:outline-none focus:border-blue-500"
                 required
               />
               {!isEmailValid && (
@@ -141,27 +151,28 @@ const Registration = () => {
               )}
             </div>
             <div className="relative">
-              <label htmlFor="password" className="block text-lg font-medium text-gray-700">Password</label>
+              <label htmlFor="password" className="block text-[1vw] mt-[1vw] font-medium text-black">Password</label>
               <input
                 type={showPassword ? "password" : "text"}
                 name="password"
                 id="password"
+                placeholder="Password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                className="w-[25.5vw] px-4 py-2 border border-gray-300 text-black text-[0.7vw] pt-[0.4vw] pb-[0.4vw] bg-[#F4F4F4] rounded-[0.8vw] focus:outline-none focus:border-blue-500"
                 required
               />
               <button
                 type="button"
                 onClick={togglePasswordVisibility}
-                className="absolute inset-y-0 right-0 flex items-center pr-3"
+                className="absolute top-[2.5vw] right-[3.5vw] transform text-[0.9vw] -translate-y-1/2 text-gray-500"
               >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
             </div>
             <button
               type="submit"
-              className="w-full px-4 py-2 font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none"
+              className="w-[25.5vw] px-4 py-2  pt-[0.5vw] pb-[0.5vw]  font-semibold text-[1vw]  text-black bg-[#03D771] rounded-[2vw] hover:bg-blue-600 focus:outline-none"
             >
               Send OTP
             </button>
@@ -189,11 +200,13 @@ const Registration = () => {
           </form>
         )}
 
-        <p className="text-center text-gray-600">
+        <p className="text-center text-black pt-[1.5vw] text-[1vw]">
           Already have an account? 
           <a href="/login" className="text-blue-500 hover:underline"> Login here</a>
         </p>
       </div>
+      </div>
+      
     </div>
   );
 };
