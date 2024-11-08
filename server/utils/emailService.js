@@ -28,8 +28,34 @@ const sendOtpToMail = async (email, otp) => {
     }
 };
 
+const sendApplicationStatusEmail = async (email, firstName, status) => {
+    const subject = status === 1 
+        ? 'Your Borrower Application has been Accepted' 
+        : 'Your Borrower Application has been Rejected';
+
+    const message = status === 1 
+        ? `Dear ${firstName},\n\nYour application has been accepted. Welcome aboard!`
+        : `Dear ${firstName},\n\nWe regret to inform you that your application has been rejected.`;
+
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: subject,
+        text: message,
+    };
+
+    try {
+        console.log(`Attempting to send email to ${email}...`); // Debug log
+        await transporter.sendMail(mailOptions);
+        console.log('Application status email sent successfully');
+    } catch (error) {
+        console.error('Error sending application status email:', error.message); // Improved error logging
+    }
+};
+
 // Export both transporter and sendOtpToMail
 module.exports = {
     transporter,
     sendOtpToMail,
+    sendApplicationStatusEmail,
 };

@@ -70,4 +70,18 @@ router.put('/update', async (req, res) => {
     }
 });
 
+router.get('/check', async (req, res) => {
+    const { email } = req.query;
+    try {
+        const invoice = await Invoice.findOne({ email });
+        if (invoice) {
+            return res.status(200).json({ exists: true });
+        }
+        return res.status(200).json({ exists: false });
+    } catch (error) {
+        console.error('Error checking invoice:', error);
+        return res.status(500).json({ message: 'Error checking invoice', error });
+    }
+});
+
 module.exports = router;

@@ -87,8 +87,8 @@ router.get('/all', async (req, res) => {
 
 router.put('/update', async (req, res) => {
     const {id, stat} = req.body;
-    console.log(id);
-    console.log(stat);
+    //console.log(id);
+    //console.log(stat);
     const invoice = await Borrower.findByIdAndUpdate(id, {$set: {verified: Number(stat)}});
     if(!invoice) {
         return res.status(400).json({message: "Error during update"});
