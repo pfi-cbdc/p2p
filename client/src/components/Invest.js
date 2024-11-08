@@ -44,10 +44,21 @@ const Invest = () => {
       if (!res.data.exists) {
           alert('Please complete your KYC first');
           setButtonDisabled(false);
-          navigate('/borrower');
+          navigate('/lender');
           return; // Ensure to return after navigating
       } else {
-
+        if(res.data.verified === 2) {
+            alert('You are NOT authorized to INVEST');
+            setButtonDisabled(false);
+            navigate('/lender-dashboard');
+            return;
+        }
+        if(res.data.verified === 0) {
+            alert('Please wait while we verify your KYC');
+            setButtonDisabled(false);
+            navigate('/lender-dashboard');
+            return;
+        }
         const response = await api.post('/api/investment', {
             amount: formData.amount,
             tenure: formData.tenure,

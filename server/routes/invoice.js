@@ -56,4 +56,32 @@ router.get('/all', async (req, res) => {
     }
 });
 
+router.put('/update', async (req, res) => {
+    try{
+        const {id, stat} = req.body;
+        console.log(id);
+        const invoice = await Invoice.findByIdAndUpdate(id, {$set: {verified: Number(stat)}});
+        if(!invoice) {
+            return res.status(400).json({message: "Error during update"});
+        }
+        return res.status(200).json({message: "All set!"});
+    } catch(err) {
+        return res.status(400).json({message: `${err}`});
+    }
+});
+
+router.get('/check', async (req, res) => {
+    const { email } = req.query;
+    try {
+        const invoice = await Invoice.findOne({ email });
+        if (invoice) {
+            return res.status(200).json({ exists: true });
+        }
+        return res.status(200).json({ exists: false });
+    } catch (error) {
+        console.error('Error checking invoice:', error);
+        return res.status(500).json({ message: 'Error checking invoice', error });
+    }
+});
+
 module.exports = router;

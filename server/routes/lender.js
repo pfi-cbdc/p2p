@@ -70,7 +70,7 @@ router.get('/status', async (req, res) => {
   const { email } = req.query;
   try {
     const lender = await Lender.findOne({ email });
-    return res.status(200).json({ exists: lender ? true : false });
+    return res.status(200).json({ exists: lender ? true : false, verified: lender ? lender.verified : 3 });
   } catch (error) {
     console.error('Error checking lender status:', error);
     return res.status(500).json({ message: 'Error checking lender status', error: error.message });
@@ -86,6 +86,17 @@ router.get('/all', async (req, res) => {
     console.error('Error fetching lenders:', error);
     res.status(400).json({ message: 'Error fetching lenders', error });
   }
+});
+
+router.put('/update', async (req, res) => {
+  const {id, stat} = req.body;
+  console.log(id);
+  console.log(stat);
+  const invoice = await Lender.findByIdAndUpdate(id, {$set: {verified: Number(stat)}});
+  if(!invoice) {
+      return res.status(400).json({message: "Error during update"});
+  }
+  return res.status(200).json({message: "All set!"});
 });
 
 module.exports = router;
