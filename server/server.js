@@ -59,9 +59,9 @@ app.use(
     name: "session", // The name of the cookie
     secret: "secret", // Replace with your secret for encrypting the cookie
     maxAge: 30 * 60 * 1000, // Session expires after 30 minutes of inactivity
-    // httpOnly: true, // Prevents XXS attacks
-    secure: false, // Set to true if using HTTPS
-    // sameSite: 'none'
+    httpOnly: true, // Prevents XXS attacks
+    secure: true, // Set to true if using HTTPS
+    sameSite: 'none'
   })
 );
 app.set('trust proxy', 1);
