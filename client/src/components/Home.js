@@ -1,10 +1,10 @@
 // client/src/components/Home.js
 import React from 'react';
-
+import FAQ from './FAQ';
 const Home = () => {
     return (
         <div>
-            home page
+           <FAQ/>
         </div>
     );
 };
