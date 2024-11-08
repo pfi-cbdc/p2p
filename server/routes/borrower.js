@@ -4,6 +4,7 @@ const Borrower = require('../models/Borrower');
 const cloudinary = require('../utils/cloudinaryConfig');
 const multer = require('multer');
 const { Readable } = require('stream');
+const { sendBorrowerStatusEmail } = require('../utils/emailService');
 
 // Configure Multer for memory storage
 const storage = multer.memoryStorage();
@@ -89,6 +90,14 @@ router.put('/update', async (req, res) => {
     const {id, stat} = req.body;
     //console.log(id);
     //console.log(stat);
+    const borrower = await Borrower.findByIdAndUpdate(id, { $set: { verified: Number(stat) } }, { new: true });
+    if (!borrower) {
+        return res.status(400).json({ message: "Error during update" });
+    }
+
+    await sendBorrowerStatusEmail(borrower.email, borrower.firstName, stat);
+    
+    
     const invoice = await Borrower.findByIdAndUpdate(id, {$set: {verified: Number(stat)}});
     if(!invoice) {
         return res.status(400).json({message: "Error during update"});
