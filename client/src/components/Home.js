@@ -3,12 +3,14 @@ import React from 'react';
 import FAQ from './FAQ';
 import Point_image from './Point_image';
 import Hero from './Hero';
+import Footer from './Footer';
 const Home = () => {
     return (
         <div>
             <Hero/>
            <FAQ/>
            <Point_image/>
+           <Footer/>
         </div>
     );
 };
