@@ -5,6 +5,7 @@ const Lender = require('../models/Lender');
 const cloudinary = require('../utils/cloudinaryConfig');
 const multer = require('multer');
 const { Readable } = require('stream');
+const { sendLenderStatusEmail } = require('../utils/emailService');
 
 // Configure multer to use memory storage
 const storage = multer.memoryStorage();
@@ -89,14 +90,19 @@ router.get('/all', async (req, res) => {
 });
 
 router.put('/update', async (req, res) => {
-  const {id, stat} = req.body;
-  console.log(id);
-  console.log(stat);
-  const invoice = await Lender.findByIdAndUpdate(id, {$set: {verified: Number(stat)}});
-  if(!invoice) {
-      return res.status(400).json({message: "Error during update"});
+  try {
+    const { id, stat, email, firstName } = req.body;
+    const invoice = await Lender.findByIdAndUpdate(id, {$set: {verified: Number(stat)}});
+    if(!invoice) {
+        return res.status(400).json({message: "Error during update"});
+    }
+    const lender = await Lender.findByIdAndUpdate(id, { $set: { verified: Number(stat) } }, { new: true })
+    await sendLenderStatusEmail(lender.email, lender.firstName, stat);
+    return res.status(200).json({message: "All set!"});
+  } catch (error) {
+    console.error('Error updating lender status:', error);
+    return res.status(500).json({ message: 'Error updating lender status', error: error.message });
   }
-  return res.status(200).json({message: "All set!"});
 });
 
 module.exports = router;

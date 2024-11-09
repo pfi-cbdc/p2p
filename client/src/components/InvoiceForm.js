@@ -95,6 +95,10 @@ const InvoiceForm = () => {
         });
         console.log(response.data);
         alert('Form submitted successfully!');
+
+        // Navigate to the WaitingPage after successful submission
+        navigate('/waiting'); // Navigate to the waiting page
+
     } catch (error) {
         console.error('Submission error:', error);
         alert('Failed to submit form. Please try again.');

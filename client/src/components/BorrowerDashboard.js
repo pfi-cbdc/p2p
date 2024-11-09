@@ -23,7 +23,7 @@ const BorrowerDashboard = () => {
                         <button onClick={() => {
                             setShowInvoiceForm(false);
                             setShowInvoices(true);
-                            }} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-300">View invoice</button>
+                            }} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-300">My invoices</button>
                         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-300">Settings</button>
                     </div>
 

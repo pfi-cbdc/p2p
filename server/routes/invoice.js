@@ -4,6 +4,7 @@ const Invoice = require('../models/invoice');
 const cloudinary = require('../utils/cloudinaryConfig');
 const multer = require('multer');
 const { Readable } = require('stream');
+const { sendInvoiceStatusEmail } = require('../utils/emailService');
 
 // Configure Multer to use memory storage
 const storage = multer.memoryStorage();
@@ -59,11 +60,16 @@ router.get('/all', async (req, res) => {
 router.put('/update', async (req, res) => {
     try{
         const {id, stat} = req.body;
-        console.log(id);
-        const invoice = await Invoice.findByIdAndUpdate(id, {$set: {verified: Number(stat)}});
+        //console.log(id);
+        const invoice = await Invoice.findByIdAndUpdate(id, {$set: {verified: Number(stat)}}, { new: true });
         if(!invoice) {
             return res.status(400).json({message: "Error during update"});
         }
+
+        
+        // email notification regarding invoice status
+        await sendInvoiceStatusEmail(invoice.email, invoice.firstName, stat);
+
         return res.status(200).json({message: "All set!"});
     } catch(err) {
         return res.status(400).json({message: `${err}`});
