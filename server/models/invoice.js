@@ -6,7 +6,8 @@ const invoiceSchema = new mongoose.Schema({
     tenureOfInvoice: { type: Number },
     interestRate: { type: Number },
     firstName: { type: String, required: true },
-    email: { type: String, required: true }
+    email: { type: String, required: true },
+    verified: { type: Number, required: true, default: 0} // 0 - pending, 1 - accepted, 2 - rejected
 });
 
 module.exports = mongoose.model('Invoice', invoiceSchema);

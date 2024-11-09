@@ -4,13 +4,14 @@ const HeroSection = () => {
     const words = ["Wealth creation", "Returns", "Passive Income"];
     const [currentWordIndex, setCurrentWordIndex] = useState(0);
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         const intervalId = setInterval(() => {
             setCurrentWordIndex((prevIndex) => (prevIndex + 1) % words.length);
         }, 1000); // Change word every 2 seconds
 
         return () => clearInterval(intervalId); // Cleanup on component unmount
-    }, []);
+    }, [words.length]);
 
     return (
         <div className="flex flex-col md:flex-row items-center justify-between p-8 bg-gray-100">

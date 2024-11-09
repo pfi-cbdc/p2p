@@ -16,6 +16,7 @@ const BorrowerForm = () => {
         gstNumber: '',
         typeOfBusiness: '',
     });
+    const [gstError, setGstError] = useState('');
 
     const navigate = useNavigate();
 
@@ -26,6 +27,16 @@ const BorrowerForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        // GST Number validation
+        const gstRegex = /^[0-3][0-9][A-Z]{5}[0-9]{4}[A-Z][1-9A-Z][Z][0-9A-Z]$/;
+        if (!gstRegex.test(formData.gstNumber)) {
+            setGstError('Invalid GST Number format.');
+            return;
+        } else {
+            setGstError(''); // Clear error if valid
+        }
+
         const formDataToSend = new FormData();
         for (const key in formData) {
             if (Array.isArray(formData[key])) {
@@ -129,10 +140,11 @@ const BorrowerForm = () => {
                             id="gstNumber" 
                             placeholder="GST Number"
                             value={formData.gstNumber} 
-                            onChange={handleChange} 
+                            onChange={(e) => setFormData({ ...formData, gstNumber: e.target.value })} 
                             className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500" 
                             required 
                         />
+                        {gstError && <p className="text-red-500 text-sm mt-1">{gstError}</p>} {/* Error message */}
                     </div>
 
                     <div>

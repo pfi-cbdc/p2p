@@ -65,12 +65,34 @@ const AdminDashboard = () => {
                                 <td className="border px-4 py-2">{lender.gstNumber}</td>
                                 <td className="border px-4 py-2">{new Date(lender.dateOfBirth).toLocaleDateString()}</td>
                                 <td className="border px-4 py-2">{lender.employmentStatus}</td>
-                                <td className="border px-4 py-2">{lender.status || 'Pending'}</td>
+                                <td className="border px-4 py-2">{lender.verified === 1 ? 'Accepted' : lender.verified === 2 ? 'Rejected' : 'Pending'}</td>
                                 <td className="border px-4 py-2">
-                                    <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded">
+                                    <button onClick={async (e) => {
+                                        e.preventDefault();
+                                        const res = await api.put('/api/lender/update', {id: lender._id, stat: 1});
+                                        if(res.status === 200) {
+                                            // make both buttons disappear
+                                            alert('Accepted a lender');
+                                            return;
+                                        } else {
+                                            return;
+                                        }
+                                    }} className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded">
                                         Accept
                                     </button>
-                                    <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                                    <button onClick={async (e) => {
+                                        e.preventDefault();
+                                        const res = await api.put('/api/lender/update', {id: lender._id, stat: 2});
+                                        if(res.status === 200) {
+                                            alert('Rejected');
+                                            return;
+                                        }
+                                        else {
+                                            // Do the button thingy
+                                            alert('Error rejecting');
+                                            return;
+                                        }
+                                    }} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                                         Reject
                                     </button>
                                 </td>
@@ -167,12 +189,36 @@ const AdminDashboard = () => {
                                 <td className="border px-4 py-2">{invoice.typeOfBusiness}</td>
                                 <td className="border px-4 py-2">{invoice.tenureOfInvoice}</td>
                                 <td className="border px-4 py-2">{invoice.interestRate}</td>
-                                <td className="border px-4 py-2">{invoice.status || 'Pending'}</td>
+                                <td className="border px-4 py-2">{invoice.verified === 1 ? 'Accepted' : invoice.verified === 2 ? 'Rejected' : 'Pending'}</td>
                                 <td className="border px-4 py-2">
-                                    <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                                    <button onClick={async (e) => {
+                                        e.preventDefault();
+                                        const res = await api.put('/api/invoices/update', {id: invoice._id, stat: 1});
+                                        if(res.status === 200) {
+                                            alert('Accepted');
+                                            return;
+                                        }
+                                        else {
+                                            // Do the button thingy
+                                            alert('Error accepting');
+                                            return;
+                                        }
+                                    }} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
                                         Accept
                                     </button>
-                                    <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                                    <button onClick={async (e) => {
+                                        e.preventDefault();
+                                        const res = await api.put('/api/invoices/update', {id: invoice._id, stat: 2});
+                                        if(res.status === 200) {
+                                            alert('Rejected');
+                                            return;
+                                        }
+                                        else {
+                                            // Do the button thingy
+                                            alert('Error rejecting');
+                                            return;
+                                        }
+                                    }} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                                         Reject
                                     </button>
                                 </td>
@@ -230,12 +276,36 @@ const AdminDashboard = () => {
                                 <td className="border px-4 py-2">{borrower.gstNumber}</td>
                                 <td className="border px-4 py-2">{new Date(borrower.dateOfBirth).toLocaleDateString()}</td>
                                 <td className="border px-4 py-2">{borrower.typeOfBusiness}</td>
-                                <td className="border px-4 py-2">{borrower.status || 'Pending'}</td>
+                                <td className="border px-4 py-2">{borrower.verified === 1 ? 'Accepted' : borrower.verified === 2 ? 'Rejected' : 'Pending'}</td>
                                 <td className="border px-4 py-2">
-                                    <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                                    <button onClick={async (e) => {
+                                        e.preventDefault();
+                                        const res = await api.put('/api/borrower/update', {id: borrower._id, stat: 1});
+                                        if(res.status === 200) {
+                                            alert('Accepted');
+                                            return;
+                                        }
+                                        else {
+                                            // Do the button thingy
+                                            alert('Error accepting');
+                                            return;
+                                        }
+                                    }} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
                                         Accept
                                     </button>
-                                    <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                                    <button onClick={async (e) => {
+                                        e.preventDefault();
+                                        const res = await api.put('/api/borrower/update', {id: borrower._id, stat: 2});
+                                        if(res.status === 200) {
+                                            alert('Rejected');
+                                            return;
+                                        }
+                                        else {
+                                            // Do the button thingy
+                                            alert('Error rejecting');
+                                            return;
+                                        }
+                                    }} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                                         Reject
                                     </button>
                                 </td>
@@ -285,12 +355,36 @@ const renderInvestments = () => {
                             <td className="border px-4 py-2">{investment.amount}</td>
                             <td className="border px-4 py-2">{investment.tenure}</td>
                             <td className="border px-4 py-2">{investment.monthlyEarnings}</td>
-                            <td className="border px-4 py-2">{investment.status || 'Pending'}</td>
+                            <td className="border px-4 py-2">{investment.verified === 1 ? 'Accepted' : investment.verified === 2 ? 'Rejected' : 'Pending'}</td>
                             <td className="border px-4 py-2">
-                                <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                                <button onClick={async (e) => {
+                                        e.preventDefault();
+                                        const res = await api.put('/api/investments/update', {id: investment._id, stat: 1});
+                                        if(res.status === 200) {
+                                            alert('Accepted');
+                                            return;
+                                        }
+                                        else {
+                                            // Do the button thingy
+                                            alert('Error accepting');
+                                            return;
+                                        }
+                                    }} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
                                     Accept
                                 </button>
-                                <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                                <button onClick={async (e) => {
+                                        e.preventDefault();
+                                        const res = await api.put('/api/investments/update', {id: investment._id, stat: 2});
+                                        if(res.status === 200) {
+                                            alert('Rejected');
+                                            return;
+                                        }
+                                        else {
+                                            // Do the button thingy
+                                            alert('Error rejecting');
+                                            return;
+                                        }
+                                    }} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                                     Reject
                                 </button>
                             </td>

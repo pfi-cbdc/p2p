@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Investment = require('../models/Investment');
-
-
+const { sendInvestmentStatusEmail } = require('../utils/emailService');
 
 router.post('/', async(req, res) => {
     // console.log(req.body); // Log the incoming data
@@ -31,6 +30,25 @@ router.get('/all', async (req, res) => {
         console.error('Error fetching investments:', error);
         res.status(400).json({ message: 'Error fetching investments', error });
     }
+});
+
+router.put('/update', async (req, res) => {
+    const {id, stat} = req.body;
+    //console.log(id);
+    //console.log(stat);
+    const invoice = await Investment.findByIdAndUpdate(id, {$set: {verified: Number(stat)}});
+    if(!invoice) {
+        return res.status(400).json({message: "Error during update"});
+    }
+
+    const investment = await Investment.findByIdAndUpdate(id, { $set: { verified: Number(stat) } });
+    if (!investment) {
+        return res.status(400).json({ message: "Error during update" });
+    }
+
+    await sendInvestmentStatusEmail(investment.email, investment.firstName, stat); 
+
+    return res.status(200).json({message: "All set!"});
 });
 
 module.exports = router;

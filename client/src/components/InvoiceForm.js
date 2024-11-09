@@ -34,48 +34,76 @@ const InvoiceForm = () => {
     setButtonDisabled(true);
 
     try {
-      // first check the kyc completion
-      const email = localStorage.getItem('email');
-      if(!email) {
-          alert('Error! Please login again');
-          setButtonDisabled(false);
-          navigate(-1);
-      };
-      const res = await api.get(`/api/borrower/status?email=${email}`);
-      if(!res) {
-          alert('There has been a misunderstanding. Please try again later');
-          setButtonDisabled(false);
-          navigate(-1);
-      };
-      if(!res.data.exists) {
-          alert('Please complete your KYC first');
-          setButtonDisabled(false);
-          navigate('/borrower');
-      } else {
+        const email = localStorage.getItem('email');
+        if (!email) {
+            alert('Error! Please login again');
+            setButtonDisabled(false);
+            navigate(-1);
+            return;
+        }
+
+        // Check if the email already exists in the invoice database
+        const invoiceCheckResponse = await api.get(`/api/invoices/check?email=${email}`);
+        if (invoiceCheckResponse.data.exists) {
+            alert('You can fill the invoice form only once.');
+            setButtonDisabled(false);
+            return;
+        }
+
+        // Proceed with the existing KYC checks and form submission
+        const res = await api.get(`/api/borrower/status?email=${email}`);
+        if (!res) {
+            alert('There has been a misunderstanding. Please try again later');
+            setButtonDisabled(false);
+            navigate(-1);
+            return;
+        }
+
+        if (!res.data.exists) {
+            alert('Please complete your KYC first');
+            setButtonDisabled(false);
+            navigate('/borrower');
+            return;
+        } else {
+            if(res.data.verified === 2) {
+                alert('You are NOT authorized to generate an INVOICE');
+                setButtonDisabled(false);
+                navigate('/borrower-dashboard');
+                return;
+            }
+            if(res.data.verified === 0) {
+                alert('Please wait while we verify your KYC');
+                setButtonDisabled(false);
+                navigate('/borrower-dashboard');
+                return;
+            }
+        }
+
         // Create FormData object to send file + form data
         const formDataToSend = new FormData();
-        formDataToSend.append('fileUpload', formData.fileUpload);  // Append the file
+        formDataToSend.append('fileUpload', formData.fileUpload);
         formDataToSend.append('typeOfBusiness', formData.typeOfBusiness);
         formDataToSend.append('tenureOfInvoice', formData.tenureOfInvoice);
         formDataToSend.append('interestRate', formData.interestRate);
         formDataToSend.append('firstName', formData.firstName);
         formDataToSend.append('email', formData.email);
-  
-        // console.log([...formDataToSend]); // This will log the FormData entries
-  
+
         const response = await api.post('/api/invoice', formDataToSend, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
         });
         console.log(response.data);
-        setButtonDisabled(false);
         alert('Form submitted successfully!');
-      }
+
+        // Navigate to the WaitingPage after successful submission
+        navigate('/waiting'); // Navigate to the waiting page
+
     } catch (error) {
-      console.error('Submission error:', error);
-      setButtonDisabled(false);
-      alert('Failed to submit form. Please try again.');
+        console.error('Submission error:', error);
+        alert('Failed to submit form. Please try again.');
+    } finally {
+        setButtonDisabled(false);
     }
   };
 

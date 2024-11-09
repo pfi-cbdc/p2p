@@ -28,7 +28,7 @@ const PORT = process.env.PORT || 5001;
 // );
 
 const corsOptions = {
-  origin: ["http://localhost:3000", "https://chic-marigold-cdd8e6.netlify.app"], // Replace with your production domain
+  origin: ["http://localhost:3000", "https://harmonious-treacle-f674f9.netlify.app"], // Replace with your production domain
   methods: ["GET", "POST", "PUT", "DELETE"], // Allowed methods
   allowedHeaders: ["Content-Type", "Authorization", "Set-Cookie"], // Allowed headers
   credentials: true, // Allow credentials (cookies, authorization headers, etc.)

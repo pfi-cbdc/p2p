@@ -4,6 +4,7 @@ const Invoice = require('../models/invoice');
 const cloudinary = require('../utils/cloudinaryConfig');
 const multer = require('multer');
 const { Readable } = require('stream');
+const { sendInvoiceStatusEmail } = require('../utils/emailService');
 
 // Configure Multer to use memory storage
 const storage = multer.memoryStorage();
@@ -53,6 +54,39 @@ router.get('/all', async (req, res) => {
     } catch (error) {
         console.error('Error fetching invoices:', error);
         res.status(400).json({ message: 'Error fetching invoices', error });
+    }
+});
+
+router.put('/update', async (req, res) => {
+    try{
+        const {id, stat} = req.body;
+        //console.log(id);
+        const invoice = await Invoice.findByIdAndUpdate(id, {$set: {verified: Number(stat)}}, { new: true });
+        if(!invoice) {
+            return res.status(400).json({message: "Error during update"});
+        }
+
+        
+        // email notification regarding invoice status
+        await sendInvoiceStatusEmail(invoice.email, invoice.firstName, stat);
+
+        return res.status(200).json({message: "All set!"});
+    } catch(err) {
+        return res.status(400).json({message: `${err}`});
+    }
+});
+
+router.get('/check', async (req, res) => {
+    const { email } = req.query;
+    try {
+        const invoice = await Invoice.findOne({ email });
+        if (invoice) {
+            return res.status(200).json({ exists: true });
+        }
+        return res.status(200).json({ exists: false });
+    } catch (error) {
+        console.error('Error checking invoice:', error);
+        return res.status(500).json({ message: 'Error checking invoice', error });
     }
 });
 
