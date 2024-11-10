@@ -24,6 +24,9 @@ const OpenInvoices = () => {
                 <table className="min-w-full bg-white border border-gray-300">
                     <thead>
                         <tr>
+                            <th className="border px-4 py-2">First Name</th>
+                            <th className="border px-4 py-2">Last Name</th>
+                            <th className="border px-4 py-2">Email</th>
                             <th className="border px-4 py-2">Invoice</th>
                             <th className="border px-4 py-2">Type of Business</th>
                             <th className="border px-4 py-2">Tenure of Invoice</th>
@@ -36,6 +39,9 @@ const OpenInvoices = () => {
                             .filter((invoice) => invoice.verified === 1)
                             .map((invoice) => (
                                 <tr key={invoice._id}>
+                                    <td className="border px-4 py-2">{invoice.firstName}</td>
+                                    <td className="border px-4 py-2">{invoice.lastName}</td>
+                                    <td className="border px-4 py-2">{invoice.email}</td>
                                     <td className="border text-blue-700 px-4 py-2">
                                         <a href={invoice.fileUpload} target="_blank" rel="noopener noreferrer">View File</a>
                                     </td>

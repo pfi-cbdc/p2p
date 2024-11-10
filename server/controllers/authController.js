@@ -132,7 +132,7 @@ exports.loginUser = async (req, res) => {
     };
 
     // Check if the user is a lender
-    const lender = await Lender.findOne({ email: user.email });
+    const lender = await Lender.findOne({ userID: user._id });
     if (lender) {
       // If the lender exists, redirect to the lender dashboard
       return res.status(200).json({
@@ -143,7 +143,7 @@ exports.loginUser = async (req, res) => {
     }
 
     // Check if the user is a borrower
-    const borrower = await Borrower.findOne({ email: user.email });
+    const borrower = await Borrower.findOne({ userID: user._id });
     if (borrower) {
       // If the borrower exists, redirect to the borrower dashboard
       return res.status(200).json({

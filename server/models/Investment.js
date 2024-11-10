@@ -14,8 +14,10 @@ const InvestmentSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    firstName: { type: String, required: true },
-    email: { type: String, required: true },
+    lenderID: {type: mongoose.Schema.Types.ObjectId, ref: 'Lender', required: true, unique: true},
+    lentTo: {type: mongoose.Schema.Types.ObjectId, ref: 'Borrower', unique: true},
+    // firstName: { type: String, required: true },
+    // email: { type: String, required: true },
     verified: { type: Number, required: true, default: 0} // 0 - pending, 1 - accepted, 2 - rejected
 });
 

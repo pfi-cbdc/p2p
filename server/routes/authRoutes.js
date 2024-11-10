@@ -25,8 +25,9 @@ router.post('/logout', logoutUser);
 router.get('/check-user/:email', async (req, res) => {
     const { email } = req.params;
     try {
-        const isLender = await Lender.findOne({ email });
-        const isBorrower = await Borrower.findOne({ email });
+        const user = await User.findOne({ email });
+        const isLender = await Lender.findOne({ userID: user._id });
+        const isBorrower = await Borrower.findOne({ userID: user._id });
         res.status(200).json({ isLender: !!isLender, isBorrower: !!isBorrower });
     } catch (error) {
         res.status(500).json({ message: 'Error checking user', error });

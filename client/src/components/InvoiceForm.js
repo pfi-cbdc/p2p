@@ -10,7 +10,7 @@ const InvoiceForm = () => {
     typeOfBusiness: 'Select',
     tenureOfInvoice: '',
     interestRate: '',
-    firstName: localStorage.getItem('firstName') || '',
+    // firstName: localStorage.getItem('firstName') || '',
     email: localStorage.getItem('email') || ''
   });
 
@@ -85,7 +85,7 @@ const InvoiceForm = () => {
         formDataToSend.append('typeOfBusiness', formData.typeOfBusiness);
         formDataToSend.append('tenureOfInvoice', formData.tenureOfInvoice);
         formDataToSend.append('interestRate', formData.interestRate);
-        formDataToSend.append('firstName', formData.firstName);
+        // formDataToSend.append('firstName', formData.firstName);
         formDataToSend.append('email', formData.email);
 
         const response = await api.post('/api/invoice', formDataToSend, {
