@@ -4,11 +4,11 @@ const Invoices = () => {
     const [response, setResponse] = useState(null);
     const fetchInvoices = async () => {
         try {
-            const firstName = localStorage.getItem('firstName');
-            const res = await api.get('/api/invoices/all');
-            if (res.status === 200) {
-                const filteredInvoices = res.data.filter(invoice => invoice.firstName === firstName);
-                setResponse(prev => ({ ...prev, invoices: filteredInvoices }));
+            const email = localStorage.getItem('email');
+            const res = await api.get(`/api/invoices/all/${email}`);
+            if(res.status === 200) {
+                setResponse({ invoices: Object.values(res.data) });
+                console.log(res.data);
             }
         } catch (error) {
             console.error("Error fetching invoices:", error);

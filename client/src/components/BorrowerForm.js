@@ -6,7 +6,7 @@ import api from '../api/axios';
 
 const BorrowerForm = () => {
     const [formData, setFormData] = useState({
-        firstName: localStorage.getItem('firstName') || '', // Retrieve first name from localStorage
+        // firstName: localStorage.getItem('firstName') || '', // Retrieve first name from localStorage
         email: localStorage.getItem('email') || '',
         aadharCard: [],
         panCard: [],

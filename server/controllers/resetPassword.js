@@ -10,7 +10,7 @@ module.exports.resetPasswordHandler = async function (req, res) {
         const email = req.body.email;
         const user = await User.findOne({ email });
         console.log(user);
-        if (user._id) {
+        if (user && user._id) {
             const token = crypto.randomBytes(20).toString("hex");
             const resetToken = new ResetPassword({
                 user_id: user._id,

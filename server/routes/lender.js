@@ -6,6 +6,7 @@ const cloudinary = require('../utils/cloudinaryConfig');
 const multer = require('multer');
 const { Readable } = require('stream');
 const { sendLenderStatusEmail } = require('../utils/emailService');
+const User = require('../models/User');
 
 // Configure multer to use memory storage
 const storage = multer.memoryStorage();
@@ -45,8 +46,12 @@ router.post(
         }
       }
 
+      // Get the user
+      const user = await User.findOne({ email: req.body.email });
+
       const newLender = new Lender({
-        firstName: req.body.firstName,
+        // firstName: req.body.firstName,
+        userID: user._id,
         aadharCard: uploadedFiles.aadharCard,
         panCard: uploadedFiles.panCard,
         accountStatement: uploadedFiles.accountStatement,
@@ -54,7 +59,7 @@ router.post(
         dateOfBirth: req.body.dateOfBirth,
         gstNumber: req.body.gstNumber,
         employmentStatus: req.body.employmentStatus,
-        email: req.body.email
+        // email: req.body.email
       });
 
       await newLender.save();
@@ -69,8 +74,9 @@ router.post(
 // Route to check lender status
 router.get('/status', async (req, res) => {
   const { email } = req.query;
+  const user = await User.findOne({ email });
   try {
-    const lender = await Lender.findOne({ email });
+    const lender = await Lender.findOne({ userID: user._id });
     return res.status(200).json({ exists: lender ? true : false, verified: lender ? lender.verified : 3 });
   } catch (error) {
     console.error('Error checking lender status:', error);
@@ -82,7 +88,16 @@ router.get('/status', async (req, res) => {
 router.get('/all', async (req, res) => {
   try {
     const lenders = await Lender.find();
-    res.status(200).json(lenders);
+    const users = await User.find();
+    const lendersWithUserDetails = lenders.map(lender => {
+      const user = users.find(user => user._id.equals(lender.userID));
+      return {
+        ...lender.toObject(),
+        firstName: user ? user.firstName : '---',
+        email: user ? user.email : '---'
+      };
+    });
+    return res.status(200).json(lendersWithUserDetails);
   } catch (error) {
     console.error('Error fetching lenders:', error);
     res.status(400).json({ message: 'Error fetching lenders', error });
@@ -91,13 +106,13 @@ router.get('/all', async (req, res) => {
 
 router.put('/update', async (req, res) => {
   try {
-    const { id, stat, email, firstName } = req.body;
-    const invoice = await Lender.findByIdAndUpdate(id, {$set: {verified: Number(stat)}});
-    if(!invoice) {
-        return res.status(400).json({message: "Error during update"});
+    const { id, stat } = req.body;
+    const lender = await Lender.findByIdAndUpdate(id, { $set: { verified: Number(stat) } }, { new: true });
+    if(!lender) {
+      return res.status(404).json({ message: 'Update unsuccessful' });
     }
-    const lender = await Lender.findByIdAndUpdate(id, { $set: { verified: Number(stat) } }, { new: true })
-    await sendLenderStatusEmail(lender.email, lender.firstName, stat);
+    const user = await User.findById(lender.userID);
+    await sendLenderStatusEmail(user.email, user.firstName, stat);
     return res.status(200).json({message: "All set!"});
   } catch (error) {
     console.error('Error updating lender status:', error);

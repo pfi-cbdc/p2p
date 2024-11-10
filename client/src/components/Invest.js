@@ -7,7 +7,7 @@ const Invest = () => {
         amount: '',
         tenure: '',
         monthlyEarnings: '',
-        firstName: localStorage.getItem('firstName') || '',
+        // firstName: localStorage.getItem('firstName') || '',
         email: localStorage.getItem('email') || ''
       });
     const [buttonDisabled, setButtonDisabled] = useState(false);
@@ -63,7 +63,7 @@ const Invest = () => {
             amount: formData.amount,
             tenure: formData.tenure,
             monthlyEarnings: formData.monthlyEarnings,
-            firstName: formData.firstName,
+            // firstName: formData.firstName,
             email: formData.email,
         }, {
             headers: {
