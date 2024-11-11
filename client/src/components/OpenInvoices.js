@@ -32,6 +32,8 @@ const OpenInvoices = () => {
                             <th className="border px-4 py-2">Tenure of Invoice</th>
                             <th className="border px-4 py-2">Interest Rate</th>
                             <th className="border px-4 py-2">Status</th>
+                            <th className="border px-4 py-2">Pay</th>
+                            
                         </tr>
                     </thead>
                     <tbody>

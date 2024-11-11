@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import api from '../api/axios';
 import { useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -9,13 +11,16 @@ const Login = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const [showPassword, setShowPassword] = useState(true);
     const [isEmailValid, setIsEmailValid] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         setErrorMessage('');
+
 
         try {
             const response = await api.post('/api/auth/login', { email, password });
@@ -34,6 +39,8 @@ const Login = () => {
             }
         } catch (error) {
             setErrorMessage(error.response?.data?.message || 'Error during login');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -100,8 +107,13 @@ const Login = () => {
                             <button
                                 type="submit"
                                 className="w-[25vw] ml-[0.5vw] px-4 mt-[2vw] pt-[0.5vw] pb-[0.5vw] font-semibold text-[1vw] text-black bg-[#03D771] rounded-[2vw] hover:bg-blue-600 focus:outline-none"
+                                disabled={loading}
                             >
-                                Log In
+                                 {loading ? (
+                            <span className="flex items-center justify-center">
+                                <FontAwesomeIcon icon={faSpinner} spin className="mr-2" /> Loggin in...
+                            </span>
+                        ) : 'Log In'}
                             </button>
                         </div>
                     </form>

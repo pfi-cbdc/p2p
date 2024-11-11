@@ -1,8 +1,9 @@
-// client/src/components/InvoiceForm.js
 import React, { useState } from 'react';
 import api from '../api/axios';
 import FileUpload from './FileUpload'; // Import the FileUpload component
 import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 const InvoiceForm = () => {
   const [formData, setFormData] = useState({
@@ -10,9 +11,9 @@ const InvoiceForm = () => {
     typeOfBusiness: 'Select',
     tenureOfInvoice: '',
     interestRate: '',
-    // firstName: localStorage.getItem('firstName') || '',
     email: localStorage.getItem('email') || ''
   });
+  const [loading, setLoading] = useState(false);
 
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ const InvoiceForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setButtonDisabled(true);
+    setLoading(true);
 
     try {
         const email = localStorage.getItem('email');
@@ -85,7 +87,6 @@ const InvoiceForm = () => {
         formDataToSend.append('typeOfBusiness', formData.typeOfBusiness);
         formDataToSend.append('tenureOfInvoice', formData.tenureOfInvoice);
         formDataToSend.append('interestRate', formData.interestRate);
-        // formDataToSend.append('firstName', formData.firstName);
         formDataToSend.append('email', formData.email);
 
         const response = await api.post('/api/invoice', formDataToSend, {
@@ -95,20 +96,20 @@ const InvoiceForm = () => {
         });
         console.log(response.data);
         alert('Form submitted successfully!');
-
         // Navigate to the WaitingPage after successful submission
-        navigate('/waiting'); // Navigate to the waiting page
+        navigate('/waiting');
 
     } catch (error) {
         console.error('Submission error:', error);
         alert('Failed to submit form. Please try again.');
     } finally {
         setButtonDisabled(false);
+        setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} enctype="multipart/form-data" className="w-full max-w-lg p-8 space-y-6 bg-white shadow-md rounded-lg">
+    <form onSubmit={handleSubmit} encType="multipart/form-data" className="w-full max-w-lg p-8 space-y-6 bg-white shadow-md rounded-lg">
 
       <FileUpload onFileSelect={handleFileSelect} /> {/* File upload component */}
       
@@ -123,7 +124,17 @@ const InvoiceForm = () => {
       <input type="number" name="tenureOfInvoice" placeholder="Tenure of Invoice" onChange={handleChange} required className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500" />
       <input type="number" name="interestRate" placeholder="Interest Rate" onChange={handleChange} required className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500" />
       
-      <button type="submit"  disabled={buttonDisabled} className="w-full px-4 py-2 mt-4 font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none">Submit</button>
+      <button 
+        type="submit" 
+        disabled={buttonDisabled} 
+        className={`w-full px-4 py-2 mt-4 font-semibold text-white rounded focus:outline-none ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
+      >
+        {loading ? (
+          <span className="flex items-center justify-center">
+            <FontAwesomeIcon icon={faSpinner} spin className="mr-2" /> Uploading...
+          </span>
+        ) : 'Upload Invoice'}
+      </button>
     </form>
   );
 };
