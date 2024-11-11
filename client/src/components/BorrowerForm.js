@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FileUpload from './FileUpload'; // Import the FileUpload component
 import api from '../api/axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 const BorrowerForm = () => {
     const [formData, setFormData] = useState({
@@ -17,6 +19,7 @@ const BorrowerForm = () => {
         typeOfBusiness: '',
     });
     const [gstError, setGstError] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
 
@@ -27,6 +30,7 @@ const BorrowerForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         
         // GST Number validation
         const gstRegex = /^[0-3][0-9][A-Z]{5}[0-9]{4}[A-Z][1-9A-Z][Z][0-9A-Z]$/;
@@ -62,6 +66,8 @@ const BorrowerForm = () => {
             } else {
                 alert('Network error. Please try again.');
             }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -178,8 +184,13 @@ const BorrowerForm = () => {
                     <button 
                         type="submit" 
                         className="w-1/3 px-4 py-2 mt-4 font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none"
+                        disabled={loading}
                     >
-                        Submit
+                        {loading ? (
+                            <span className="flex items-center justify-center">
+                                <FontAwesomeIcon icon={faSpinner} spin className="mr-2" /> Submitting...
+                            </span>
+                        ) : 'Submit'}
                     </button>
                 </div>
             </form>

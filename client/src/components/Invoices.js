@@ -21,16 +21,16 @@ const Invoices = () => {
         if (!response?.invoices) return <p>No invoices available.</p>;
 
         return (
-            <div className="p-4">
+            <div className="">
                 <h2 className="text-2xl font-semibold mb-4">Invoice List</h2>
                 <table className="min-w-full bg-white border border-gray-300">
                     <thead>
                         <tr>
-                            <th className="border px-4 py-2">Invoice</th>
-                            <th className="border px-4 py-2">Type of Business</th>
-                            <th className="border px-4 py-2">Tenure of Invoice</th>
-                            <th className="border px-4 py-2">Interest Rate</th>
-                            <th className="border px-4 py-2">Status</th>
+                            <th className="border px-3 py-2">Invoice</th>
+                            <th className="border px-3 py-2">Type of Business</th>
+                            <th className="border px-3 py-2">Tenure of Invoice</th>
+                            <th className="border px-3 py-2">Interest Rate</th>
+                            <th className="border px-3 py-2">Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -39,10 +39,11 @@ const Invoices = () => {
                                 <td className="border text-blue-700 px-4 py-2">
                                     <a href={invoice.fileUpload} target="_blank" rel="noopener noreferrer">View File</a>
                                 </td>
-                                <td className="border px-4 py-2">{invoice.typeOfBusiness}</td>
-                                <td className="border px-4 py-2">{invoice.tenureOfInvoice}</td>
-                                <td className="border px-4 py-2">{invoice.interestRate}</td>
-                                <td className="border px-4 py-2">{invoice.verified === 1 ? 'Accepted' : invoice.verified === 2 ? 'Rejected' : 'Pending'}</td>
+                                <td className="border px-3 py-2">{invoice.typeOfBusiness}</td>
+                                <td className="border px-3 py-2">{invoice.tenureOfInvoice}</td>
+                                <td className="border px-3 py-2">{invoice.interestRate}</td>
+                                <td className="border px-3 py-2">{invoice.verified === 1 ? 'Accepted' : invoice.verified === 2 ? 'Rejected' : 'Pending'}</td>
+                                <td className="border px-3 py-2 text-blue-500 text-underline">Pay Now</td>
                             </tr>
                         ))}
                     </tbody>
