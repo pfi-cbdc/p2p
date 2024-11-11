@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from '../api/axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 const Invest = () => {
     const [formData, setFormData] = useState({
@@ -10,6 +12,7 @@ const Invest = () => {
         // firstName: localStorage.getItem('firstName') || '',
         email: localStorage.getItem('email') || ''
       });
+    const [loading, setLoading] = useState(false);
     const [buttonDisabled, setButtonDisabled] = useState(false);
     const navigate = useNavigate();
 
@@ -22,6 +25,7 @@ const Invest = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setButtonDisabled(true);
+    setLoading(true);
 
     try {
       // First check the KYC completion
@@ -78,6 +82,7 @@ const Invest = () => {
         alert('Failed to submit form. Please try again.');
     } finally {
         setButtonDisabled(false);
+        setLoading(false);
     }
     };
 
@@ -96,7 +101,17 @@ const Invest = () => {
                     <label className="block font-medium mb-2">Monthly Earnings:</label>
                     <input type="number" name="monthlyEarnings" placeholder="Montly Earnings" onChange={handleChange} required className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500" />
                 </div>
-                <button type="submit"  disabled={buttonDisabled} className="w-full px-4 py-2 mt-4 font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none">Submit</button>
+                <button 
+        type="submit" 
+        disabled={buttonDisabled} 
+        className={`w-full px-4 py-2 mt-4 font-semibold text-white rounded focus:outline-none ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
+      >
+        {loading ? (
+          <span className="flex items-center justify-center">
+            <FontAwesomeIcon icon={faSpinner} spin className="mr-2" /> Investing...
+          </span>
+        ) : 'Start Investing'}
+      </button>
             </form>
         </div>
     );
