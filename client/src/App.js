@@ -17,6 +17,7 @@ import ResetPassword from './components/ResetPassword.js';
 import AdminProtectedRoute, { AdminLoginProtection } from './components/AdminProtectedRoute.js';
 import ResetMailPassword from './components/ResetMailPassword.js';
 import WaitingPage from './components/WaitingPage';
+import PaymentSuccess from './components/PaymentSuccess';
 
 function Root() {
   const location = useLocation();
@@ -51,6 +52,7 @@ function Root() {
           <Route path="/reset-pass" element={<ResetPassword />} /> 
           <Route path="/reset-password" element={<ResetMailPassword />} /> 
           <Route path="/waiting" element={<WaitingPage />} />
+          <Route path="/paymentsuccess" element={<PaymentSuccess />} />
           <Route 
             path="/lender" 
             element={

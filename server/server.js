@@ -18,6 +18,7 @@ const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require('./routes/adminRoute');
 const investmentRoutes = require('./routes/investment')
 const resetPassword = require('./routes/resetPassword')
+const paymentRoutes = require('./routes/paymentRoutes')
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -132,6 +133,12 @@ app.use('/api/reset', resetPassword);
 
 // Serve uploaded files statically (if needed)
 app.use("/uploads", express.static("uploads"));
+
+// Payment Routes
+app.use("/api/razor", paymentRoutes);
+app.get("/api/getkey", (req, res) =>
+  res.status(200).json({ key: process.env.RAZORPAY_API_KEY })
+);
 
 // Start server
 app.listen(PORT, () => {
