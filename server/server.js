@@ -6,6 +6,9 @@ const multer = require("multer");
 const path = require("path");
 const bodyParser = require("body-parser");
 const setRateLimit = require('express-rate-limit')
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
+const swaggerDocument = YAML.load('./swagger.yaml');
 require("dotenv").config();
 
 const lenderRoutes = require("./routes/lender");
@@ -92,6 +95,9 @@ mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error(err));
+
+// Swagger documentation route
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Basic route
 app.get("/", (req, res) => {

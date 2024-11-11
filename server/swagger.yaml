@@ -1,0 +1,390 @@
+openapi: 3.0.0
+info:
+  title: PFI API
+  description: API documentation for PFI application
+  version: 1.0.0
+  
+servers:
+  - url: http://localhost:5001
+    description: Development server
+  - url: https://harmonious-treacle-f674f9.netlify.app
+    description: Production server
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: session
+  schemas:
+    User:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+    
+    Lender:
+      type: object
+      properties:
+        userID:
+          type: string
+        aadharCard:
+          type: array
+          items:
+            type: string
+        panCard:
+          type: array
+          items:
+            type: string
+        gender:
+          type: string
+          enum: ['male', 'female', 'other']
+        dateOfBirth:
+          type: string
+          format: date
+        accountStatement:
+          type: array
+          items:
+            type: string
+        gstNumber:
+          type: string
+        employmentStatus:
+          type: string
+          enum: ['self-employed', 'salaried', 'business']
+        verified:
+          type: number
+          enum: [0, 1, 2]
+          description: "0 - pending, 1 - accepted, 2 - rejected"
+
+    Borrower:
+      type: object
+      properties:
+        userID:
+          type: string
+        aadharCard:
+          type: array
+          items:
+            type: string
+        panCard:
+          type: array
+          items:
+            type: string
+        gender:
+          type: string
+          enum: ['male', 'female', 'other']
+        dateOfBirth:
+          type: string
+          format: date
+        accountStatement:
+          type: array
+          items:
+            type: string
+        gstNumber:
+          type: string
+        typeOfBusiness:
+          type: string
+          enum: ['test1', 'test2', 'test3', 'test4', 'test5']
+        verified:
+          type: number
+          enum: [0, 1, 2]
+          description: "0 - pending, 1 - accepted, 2 - rejected"
+    
+    Investment:
+      type: object
+      properties:
+        amount:
+          type: number
+        tenure:
+          type: number
+        monthlyEarnings:
+          type: number
+        lenderID:
+          type: string
+    
+    Invoice:
+      type: object
+      properties:
+        fileUpload:
+          type: string
+        typeOfBusiness:
+          type: string
+          enum: ['Select', 'Sole Proprietorship', 'Partnership', 'Private Limited', 'Public Limited']
+        tenureOfInvoice:
+          type: number
+        interestRate:
+          type: number
+        borrowerID:
+          type: string
+        verified:
+          type: number
+          enum: [0, 1, 2]
+          description: "0 - pending, 1 - accepted, 2 - rejected"
+
+paths:
+  /api/auth/register:
+    post:
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: OTP sent successfully
+        '400':
+          description: Registration error
+
+  /api/auth/verify-otp:
+    post:
+      summary: Verify OTP for registration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                otp:
+                  type: string
+                email:
+                  type: string
+      responses:
+        '200':
+          description: OTP verified successfully
+        '400':
+          description: Invalid OTP
+
+  /api/auth/login:
+    post:
+      summary: Login user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Login successful
+        '400':
+          description: Login failed
+
+  /api/auth/logout:
+    post:
+      summary: Logout user
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Logout successful
+        '400':
+          description: Logout failed
+
+  /api/auth/check-user/{email}:
+    get:
+      summary: Check if user exists and their roles
+      parameters:
+        - in: path
+          name: email
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User status retrieved successfully
+        '500':
+          description: Error checking user status
+
+  /api/lender:
+    post:
+      summary: Create new lender
+      security:
+        - cookieAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                aadharCard:
+                  type: string
+                  format: binary
+                panCard:
+                  type: string
+                  format: binary
+                accountStatement:
+                  type: string
+                  format: binary
+                gender:
+                  type: string
+                dateOfBirth:
+                  type: string
+                gstNumber:
+                  type: string
+                employmentStatus:
+                  type: string
+                email:
+                  type: string
+      responses:
+        '201':
+          description: Lender created successfully
+        '400':
+          description: Error creating lender
+
+  /api/lender/status:
+    get:
+      summary: Check lender status
+      parameters:
+        - in: query
+          name: email
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lender status retrieved successfully
+        '500':
+          description: Error checking lender status
+
+  /api/lender/all:
+    get:
+      summary: Get all lenders
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: List of all lenders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Lender'
+
+  /api/borrower:
+    post:
+      summary: Create new borrower
+      security:
+        - cookieAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                aadharCard:
+                  type: string
+                  format: binary
+                panCard:
+                  type: string
+                  format: binary
+                accountStatement:
+                  type: string
+                  format: binary
+                gender:
+                  type: string
+                dateOfBirth:
+                  type: string
+                gstNumber:
+                  type: string
+                typeOfBusiness:
+                  type: string
+                email:
+                  type: string
+      responses:
+        '201':
+          description: Borrower created successfully
+        '400':
+          description: Error creating borrower
+
+  /api/investment:
+    post:
+      summary: Create new investment
+      security:
+        - cookieAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                tenure:
+                  type: number
+                monthlyEarnings:
+                  type: number
+                email:
+                  type: string
+      responses:
+        '201':
+          description: Investment created successfully
+        '400':
+          description: Error creating investment
+
+  /api/investment/all:
+    get:
+      summary: Get all investments
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: List of all investments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Investment'
+
+  /api/invoice/all/{email}:
+    get:
+      summary: Get invoices by email
+      parameters:
+        - in: path
+          name: email
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of invoices for the user
+        '400':
+          description: Error fetching invoices
+
+  /api/admin/dashboard:
+    post:
+      summary: Get admin dashboard details
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Dashboard details retrieved successfully
+        '400':
+          description: Error fetching dashboard details
+
+  /api/admin/verify-user:
+    post:
+      summary: Verify if user is admin
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: User verified as admin
+        '400':
+          description: Unauthorized access
