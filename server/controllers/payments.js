@@ -58,7 +58,8 @@ const paymentVerification = async (req, res) => {
         await newPayment.save();
     
         res.redirect(
-          `http://localhost:3000/paymentsuccess?reference=${razorpay_payment_id}`   
+          `${process.env.FRONTEND_URL}/paymentsuccess?reference=${razorpay_payment_id}`
+          // `http://localhost:3000/paymentsuccess?reference=${razorpay_payment_id}`
         );
       } else {
         res.status(400).json({
@@ -66,7 +67,8 @@ const paymentVerification = async (req, res) => {
         });
       }
     } catch(err) {
-        return res.redirect(`http://localhost:3000/lender-dashboard`);
+        return res.redirect(`${process.env.FRONTEND_URL}/lender-payments`);
+        // return res.redirect(`http://localhost:3000/lender-payments`);
     }
 };
 
