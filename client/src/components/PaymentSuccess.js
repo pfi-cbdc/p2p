@@ -19,7 +19,7 @@ const PaymentSuccess = () => {
                     <p className="text-gray-700 text-sm">Reference No. <span className="font-semibold text-gray-900">{referenceNum}</span></p>
                 </div>
                 <button
-                    onClick={() => window.location.href = '/lender-dashboard'}
+                    onClick={() => window.location.href = '/lender-payments'}
                     className="mt-4 bg-green-500 text-white px-6 py-2 rounded-md font-medium hover:bg-green-600 transition duration-300 ease-in-out"
                 >
                     Back to Home

@@ -2,11 +2,13 @@
 import React, { useState } from 'react';
 import Invest from './Invest';
 import OpenInvoices from './OpenInvoices';
+import Payments from './Payments';
 
 const LenderDashboard = () => {
     const firstName = localStorage.getItem('firstName'); 
     const [showOpenInvoices, setShowOpenInvoices] = useState(false);
     const [showInvestmentForm, setShowInvestmentForm] = useState(false);
+    const [showPayemts, setShowPayemts] = useState(false);
 
     return (
         <div className="min-h-screen">
@@ -24,6 +26,7 @@ const LenderDashboard = () => {
                         <button 
                             onClick={() => {
                                 setShowOpenInvoices(false);
+                                setShowPayemts(false);
                                 setShowInvestmentForm(true);
                             }} 
                             className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
@@ -48,13 +51,18 @@ const LenderDashboard = () => {
                         <button 
                             onClick={() => {
                                 setShowInvestmentForm(false);
+                                setShowPayemts(false);
                                 setShowOpenInvoices(true);
                             }} 
                             className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                         >
                             Open Invoices
                         </button>
-                        <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                        <button onClick={() => {
+                            setShowOpenInvoices(false);
+                            setShowInvestmentForm(false);
+                            setShowPayemts(true);
+                        }} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                             Your Payments
                         </button>
                         <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
@@ -83,6 +91,7 @@ const LenderDashboard = () => {
                         {/* Conditional Rendering of Components */}
                         {showOpenInvoices && <OpenInvoices />}
                         {showInvestmentForm && <Invest />}
+                        {showPayemts && <Payments />}
                     </div>
                 </div>
             </div>
