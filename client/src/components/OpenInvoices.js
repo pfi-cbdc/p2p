@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import api from '../api/axios';
+import { useNavigate } from 'react-router-dom';
 const OpenInvoices = () => {
     const [response, setResponse] = useState(null);
     const [amount, setAmount] = useState(1);
+    const [buttonDisabled, setButtonDisabled] = useState(false);
+    const navigate = useNavigate();
     const fetchInvoices = async () => {
         try {
             const res = await api.get('/api/invoices/all');
@@ -63,6 +66,42 @@ const OpenInvoices = () => {
                                     <td className="border px-4 py-2">
                                         <button onClick={async (e) => {
                                         e.preventDefault();
+                                        setButtonDisabled(true);
+                                        const email = localStorage.getItem('email');
+                                        if (!email) {
+                                            alert('Error! Please login again');
+                                            setButtonDisabled(false);
+                                            navigate('/login');
+                                            return; // Ensure to return after navigating
+                                        }
+
+                                        const res = await api.get(`/api/lender/status?email=${email}`);
+                                        if (!res) {
+                                            alert('There has been a misunderstanding. Please try again later');
+                                            setButtonDisabled(false);
+                                            navigate(-1);
+                                            return; // Ensure to return after navigating
+                                        }
+
+                                        if (!res.data.exists) {
+                                            alert('Please complete your KYC first');
+                                            setButtonDisabled(false);
+                                            navigate('/lender');
+                                            return; // Ensure to return after navigating
+                                        } else {
+                                            if(res.data.verified === 2) {
+                                                alert('You are NOT authorized to INVEST');
+                                                setButtonDisabled(false);
+                                                navigate('/lender-dashboard');
+                                                return;
+                                            }
+                                            if(res.data.verified === 0) {
+                                                alert('Please wait while we verify your KYC');
+                                                setButtonDisabled(false);
+                                                navigate('/lender-dashboard');
+                                                return;
+                                            }
+                                        }
                                         const { data: { key } } = await api.get("/api/getkey")
                                         const { data: { order } } = await api.post("/api/razor/checkout", {
                                             amount: Number(amount)
@@ -80,7 +119,8 @@ const OpenInvoices = () => {
                                                 invoiceID: invoice._id,
                                                 lenderEmail: localStorage.getItem('email')
                                             },
-                                            callback_url: "https://pfi-dwxi.onrender.com/api/razor/paymentverification",
+                                            callback_url: "https://pfi-dwxi.onrender.com/api/razor/paymentverification", // -- prod
+                                            // callback_url: "http://localhost:5001/api/razor/paymentverification", // -- dev
                                             prefill: {
                                                 name: "P-Fi",
                                                 email: "someone@somewhere.com",
@@ -92,7 +132,8 @@ const OpenInvoices = () => {
                                         };
                                         const razor = new window.Razorpay(options);
                                         razor.open();
-                                        }} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                                        setButtonDisabled(false);
+                                        }} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" disabled={buttonDisabled}>
                                             Pay
                                         </button>
                                     </td>
