@@ -13,11 +13,6 @@ const Home = () => {
                 <Hero />
             </div>
 
-            {/* Point Image Section */}
-            {/* <div className="w-full max-w-6xl">
-                <PointImage />
-            </div> */}
-
             {/* FAQ Section */}
             <div className="w-full max-w-6xl">
                 <FAQ />
