@@ -142,7 +142,7 @@ router.get('/profile', async (req, res) => {
           lastName: user.lastName,
           phone: user.phone,
           email: user.email,
-          lenderID: lender ? lender._id : null,
+          lenderID: lender.lenderId,
       };
 
       return res.status(200).json(userInfo);
