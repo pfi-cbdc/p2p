@@ -8,18 +8,18 @@ const Footer = () => {
       <div className="max-w-screen-xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Logo and Description */}
         <div>
-          <h3 className="text-lg text-black font-semibold mb-2">Per Annum</h3>
-          <p className="text-sm">
+          <h3 className="text-lg text-blue-600 font-semibold mb-2">Per Annum</h3>
+          <p className="text-sm text-gray-600">
             Per Annum is building India's largest platform for alternate and fixed income investments, unlocking a large basket of investment products previously unavailable to the Indian retail investor.
           </p>
           <div className="flex mt-4 space-x-4">
-            <a href="#" className="text-gray-500 hover:text-gray-800">
+            <a href="#" className="text-gray-500 hover:text-blue-600">
               <FontAwesomeIcon icon={faFacebook} size="lg" />
             </a>
-            <a href="#" className="text-gray-500 hover:text-gray-800">
+            <a href="#" className="text-gray-500 hover:text-blue-600">
               <FontAwesomeIcon icon={faInstagram} size="lg" />
             </a>
-            <a href="#" className="text-gray-500 hover:text-gray-800">
+            <a href="#" className="text-gray-500 hover:text-blue-600">
               <FontAwesomeIcon icon={faLinkedin} size="lg" />
             </a>
           </div>
@@ -27,27 +27,27 @@ const Footer = () => {
 
         {/* Navigation Links */}
         <div>
-          <h3 className="text-lg text-black font-semibold mb-2">Navigation</h3>
+          <h3 className="text-lg text-blue-600 font-semibold mb-2">Navigation</h3>
           <ul className="space-y-2">
-            <li><a href="#" className="text-sm hover:text-gray-800">About us</a></li>
-            <li><a href="#" className="text-sm hover:text-gray-800">Blogs</a></li>
-            <li><a href="#" className="text-sm hover:text-gray-800">FAQs</a></li>
-            <li><a href="#" className="text-sm hover:text-gray-800">How it works</a></li>
+            <li><a href="#" className="text-sm text-gray-600 hover:text-blue-600">About us</a></li>
+            <li><a href="#" className="text-sm text-gray-600 hover:text-blue-600">Blogs</a></li>
+            <li><a href="#" className="text-sm text-gray-600 hover:text-blue-600">FAQs</a></li>
+            <li><a href="#" className="text-sm text-gray-600 hover:text-blue-600">How it works</a></li>
           </ul>
         </div>
 
         {/* Contact and Legal Info */}
         <div>
-          <h3 className="text-lg text-black font-semibold mb-2">Contact</h3>
-          <p className="text-sm">+91 8448693369</p>
-          <p className="text-sm">support@perannum.money</p>
-          <p className="text-sm">
+          <h3 className="text-lg text-blue-600 font-semibold mb-2">Contact</h3>
+          <p className="text-sm text-gray-600">+91 8448693369</p>
+          <p className="text-sm text-gray-600">support@perannum.money</p>
+          <p className="text-sm text-gray-600">
             7A, 2nd Floor, Vikram Vihar, Ring Road, Lajpat Nagar - 4, New Delhi - 110024, India
           </p>
           <div className="mt-4">
-            <h3 className="text-lg text-black font-semibold mb-2">Licence</h3>
-            <a href="#" className="text-sm hover:text-gray-800">Privacy Policy</a><br />
-            <a href="#" className="text-sm hover:text-gray-800">Terms of use</a>
+            <h3 className="text-lg text-blue-600 font-semibold mb-2">Licence</h3>
+            <a href="#" className="text-sm text-gray-600 hover:text-blue-600">Privacy Policy</a><br />
+            <a href="#" className="text-sm text-gray-600 hover:text-blue-600">Terms of use</a>
           </div>
         </div>
       </div>
