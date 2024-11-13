@@ -5,7 +5,7 @@ import api from '../api/axios';
 
 const Navbar = () => {
     const navigate = useNavigate();
-    
+
     const handleLogout = async () => {
         try {
             await api.post('/api/auth/logout');
@@ -20,28 +20,29 @@ const Navbar = () => {
             }
         }
     };
-    
 
     // Check if user is logged in by checking local storage
     const isLoggedIn = localStorage.getItem('firstName') !== null;
 
     return (
-        <nav className="bg-[#FCFCFC] px-4 shadow-md">
+        <nav className="bg-gray-100 px-4 shadow-md">
             <div className="container mx-auto flex justify-between items-center ">
                 <div className="flex items-center">
-                    <Link to="/" className="text-[2.2vw] font-bold text-red-600">PFI</Link>
+                    <Link to="/" className="text-[2.2vw] font-bold text-blue-600">PFI</Link>
                 </div>
                 <div className="flex space-x-4">
                     {isLoggedIn ? (
-                        <>
-                            <button className="text-red-600 hover:underline" onClick={handleLogout}>
-                                Logout
-                            </button>
-                        </>
+                        <button className="text-blue-600 font-semibold hover:underline" onClick={handleLogout}>
+                            Logout
+                        </button>
                     ) : (
-                        <div className='flex gap-[3vw]'>
-                            <Link className="text-black font-semibold text-[1.2vw] hover:underline" to="/register">Register</Link>
-                            <Link className="text-black font-semibold text-[1.2vw] hover:underline" to="/login">Log In</Link>
+                        <div className="flex gap-[3vw]">
+                            <Link className="text-gray-800 font-semibold text-[1.2vw] hover:text-blue-600" to="/register">
+                                Register
+                            </Link>
+                            <Link className="text-gray-800 font-semibold text-[1.2vw] hover:text-blue-600" to="/login">
+                                Log In
+                            </Link>
                         </div>
                     )}
                 </div>
@@ -51,4 +52,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
