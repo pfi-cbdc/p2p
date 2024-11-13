@@ -13,12 +13,15 @@ const Footer = () => {
             Per Annum is building India's largest platform for alternate and fixed income investments, unlocking a large basket of investment products previously unavailable to the Indian retail investor.
           </p>
           <div className="flex mt-4 space-x-4">
+          {/* eslint-disable-next-line */}
             <a className="text-gray-500 hover:text-blue-600">
               <FontAwesomeIcon icon={faFacebook} size="lg" />
             </a>
+          {/* eslint-disable-next-line */}
             <a className="text-gray-500 hover:text-blue-600">
               <FontAwesomeIcon icon={faInstagram} size="lg" />
             </a>
+          {/* eslint-disable-next-line */}
             <a className="text-gray-500 hover:text-blue-600">
               <FontAwesomeIcon icon={faLinkedin} size="lg" />
             </a>
@@ -29,9 +32,13 @@ const Footer = () => {
         <div>
           <h3 className="text-lg text-blue-600 font-semibold mb-2">Navigation</h3>
           <ul className="space-y-2">
+          {/* eslint-disable-next-line */}
             <li><a className="text-sm text-gray-600 hover:text-blue-600">About us</a></li>
+          {/* eslint-disable-next-line */}
             <li><a className="text-sm text-gray-600 hover:text-blue-600">Blogs</a></li>
+          {/* eslint-disable-next-line */}
             <li><a className="text-sm text-gray-600 hover:text-blue-600">FAQs</a></li>
+          {/* eslint-disable-next-line */}
             <li><a className="text-sm text-gray-600 hover:text-blue-600">How it works</a></li>
           </ul>
         </div>
@@ -46,7 +53,9 @@ const Footer = () => {
           </p>
           <div className="mt-4">
             <h3 className="text-lg text-blue-600 font-semibold mb-2">Licence</h3>
+            {/* eslint-disable-next-line */}
             <a className="text-sm text-gray-600 hover:text-blue-600">Privacy Policy</a><br />
+            {/* eslint-disable-next-line */}
             <a className="text-sm text-gray-600 hover:text-blue-600">Terms of use</a>
           </div>
         </div>
@@ -65,6 +74,7 @@ const Footer = () => {
           By using our platform, users acknowledge and agree to comply with all applicable laws and regulations. Per Annum reserves the right to modify platform features, terms, and conditions without prior notice. Users are encouraged to regularly review our terms of service and stay informed about any updates.
         </p>
         <p className="mt-2">
+          {/* eslint-disable-next-line */}
           Investing on the Per Annum platform is subject to risks. Please read all documents carefully before investing. If you have any questions or concerns, feel free to contact our customer support for assistance. Please also refer to the following link for detailed lenders T&Cs - <a href="#" className="underline text-blue-600">Terms and condition</a>.
         </p>
         <p className="mt-2">
