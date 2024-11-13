@@ -120,4 +120,37 @@ router.put('/update', async (req, res) => {
   }
 });
 
+// Route to get user profile
+router.get('/profile', async (req, res) => {
+  try {
+    // console.log('Session data:', req.session); // Debugging
+    const userId = req.session?.user?.id;
+    // console.log('User ID from session:', userId); // Debugging
+      if (!userId) {
+          return res.status(401).json({ message: 'User not authenticated' });
+      }
+
+      const user = await User.findById(userId);
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
+
+      const lender = await Lender.findOne({ userID: user._id });
+
+      const userInfo = {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          phone: user.phone,
+          email: user.email,
+          lenderID: lender ? lender._id : null,
+      };
+
+      return res.status(200).json(userInfo);
+  } catch (error) {
+      console.error('Error fetching user profile:', error);
+      return res.status(500).json({ message: 'Error fetching user profile', error: error.message });
+  }
+});
+
+
 module.exports = router;
