@@ -16,7 +16,7 @@ const FAQ = () => {
 
     return (
         <div className="max-w-5xl mx-auto px-4 md:px-0">
-            <h1 className="text-3xl font-bold text-yellow-500 mb-8 text-center">Frequently Asked Questions</h1>
+            <h1 className="text-3xl font-bold text-blue-500 mb-8 text-center">Frequently Asked Questions</h1>
             <div className="flex flex-col md:flex-row gap-8">
                 {/* FAQ Section */}
                 <div className="md:w-2/3 space-y-4">
@@ -39,8 +39,8 @@ const FAQ = () => {
                     <p className="text-lg font-medium mb-2">Want to learn more?</p>
                     <p className="text-gray-700 mb-4">Connect with us now! Our support team will help you within 2 hours.</p>
                     <div className="space-y-2">
-                        <button className="w-full px-4 py-2 bg-yellow-500 text-white rounded-lg shadow">WhatsApp Us</button>
-                        <button className="w-full px-4 py-2 bg-yellow-500 text-white rounded-lg shadow">Email Us</button>
+                        <button className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg shadow">WhatsApp Us</button>
+                        <button className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg shadow">Email Us</button>
                     </div>
                 </div>
             </div>

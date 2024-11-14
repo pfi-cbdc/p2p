@@ -1,16 +1,21 @@
 import React, { useState } from 'react';
 import Invest from './Invest';
 import OpenInvoices from './OpenInvoices';
+
 import api from '../api/axios';
+
+import Payments from './Payments';
+
 
 const LenderDashboard = () => {
     const firstName = localStorage.getItem('firstName'); 
     const [showOpenInvoices, setShowOpenInvoices] = useState(false);
     const [showInvestmentForm, setShowInvestmentForm] = useState(false);
+
     const [userDetails, setUserDetails] = useState(null);
     const [showUserDetails, setShowUserDetails] = useState(false);
     const [showGreeting, setShowGreeting] = useState(true); // State to toggle greeting visibility
-
+    const [showPayemts, setShowPayemts] = useState(false);
     const handleProfileClick = async () => {
         const email = localStorage.getItem('email');
         if (!email) {
@@ -32,6 +37,7 @@ const LenderDashboard = () => {
         }
     };
 
+
     return (
         <div className="min-h-screen">
             <div className="flex shadow-lg">
@@ -42,19 +48,25 @@ const LenderDashboard = () => {
                 >
                     <div className='border-t-2 border-gray-400'></div>
 
+
                     <button 
                         onClick={() => {
                             setShowOpenInvoices(false);
                             setShowInvestmentForm(true);
                             setShowUserDetails(false);
+                            setShowPayemts(false);
                             setShowGreeting(true);
                         }} 
                         className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                     >
                         Invest
                     </button>
+         
 
                     <div className='border-t-2 border-gray-400'></div>
+
+
+                
 
                     <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                         Home
@@ -64,12 +76,15 @@ const LenderDashboard = () => {
                         Profile
                     </button>
 
+
                     <div className='border-t-2 border-gray-400'></div>
+
 
                     <button 
                         onClick={() => {
                             setShowInvestmentForm(false);
                             setShowOpenInvoices(true);
+                           setShowPayemts(false);
                             setShowUserDetails(false);
                             setShowGreeting(true);
                         }} 
@@ -77,21 +92,15 @@ const LenderDashboard = () => {
                     >
                         Open Invoices
                     </button>
-                    <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-                        Your Payments
-                    </button>
+                     <button onClick={() => {
+                            setShowOpenInvoices(false);
+                            setShowInvestmentForm(false);
+                            setShowPayemts(true);
+                        }} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                            Your Payments
+                      </button>
                     <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                         Wallet
-                    </button>
-
-                    <div className='border-t-2 border-gray-400'></div>
-
-                    <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-                        Dummy button
-                    </button>
-
-                    <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-                        Dummy button
                     </button>
 
                     <div className='border-t-2 border-gray-400'></div>
@@ -110,7 +119,8 @@ const LenderDashboard = () => {
                     {/* Conditional Rendering of Components */}
                     {showOpenInvoices && <OpenInvoices />}
                     {showInvestmentForm && <Invest />}
-                    
+                    {showPayemts && <Payments />}
+
                     {/* New section to display user details */}
                     {showUserDetails && userDetails && (
                         <div className="mt-5">
@@ -122,6 +132,9 @@ const LenderDashboard = () => {
                             <p><strong>Lender ID:</strong> {userDetails.lenderID}</p>
                         </div>
                     )}
+
+                   
+
                 </div>
             </div>
         </div>
