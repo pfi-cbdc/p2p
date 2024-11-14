@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import api from "../api/axios";
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+
 // const api = axios.create({
 //   baseURL: "http://localhost:5001/api/auth",
 //   withCredentials: true,
@@ -19,6 +22,7 @@ const Registration = () => {
   const [otpSent, setOtpSent] = useState(false);
   const [message, setMessage] = useState("");
   const [showPassword, setShowPassword] = useState(true); // Password eye
+  const [loading, setLoading] = useState(false);
 
   //Regex Implementation email and phone number
   const [isEmailValid, setIsEmailValid] = useState(true);
@@ -37,6 +41,7 @@ const Registration = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    setLoading(true);
     if (otpSent) return;
     try {
       const response = await api.post("/api/auth/register", formData);
@@ -44,14 +49,23 @@ const Registration = () => {
       if(response.status !== 200 && response.status !== 400) {
         await api.post("/api/auth/send-otp", { email: formData.email });
       }
-      setOtpSent(true);
+      if (response.status === 200) {
+        localStorage.setItem('firstName', formData.firstName);
+        localStorage.setItem('lastName', formData.lastName);
+        localStorage.setItem('email', formData.email);
+        localStorage.setItem('phone', formData.phone);
+        setOtpSent(true);
+    }
     } catch (error) {
       setMessage(error.response?.data?.message || "Error during registration");
-    }
+    } finally {
+      setLoading(false);
+  }
   };
 
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await api.post("/api/auth/verify-otp", { otp });
       setMessage(response.data.message);
@@ -62,7 +76,9 @@ const Registration = () => {
       }
     } catch (error) {
       setMessage(error.response?.data?.message || "Error verifying OTP");
-    }
+    }finally {
+      setLoading(false);
+  }
   };
   
   // Eye Button handler on password box
@@ -173,8 +189,13 @@ const Registration = () => {
             <button
               type="submit"
               className="w-[25.5vw] px-4 py-2  pt-[0.5vw] pb-[0.5vw]  font-semibold text-[1vw]  text-black bg-[#03D771] rounded-[2vw] hover:bg-blue-600 focus:outline-none"
+              disabled={loading}
             >
-              Send OTP
+              {loading ? (
+                            <span className="flex items-center justify-center">
+                                <FontAwesomeIcon icon={faSpinner} spin className="mr-2" /> Sending otp...
+                            </span>
+                        ) : 'Send otp'}
             </button>
           </form>
         ) : (
@@ -194,8 +215,13 @@ const Registration = () => {
             <button
               type="submit"
               className="w-full px-4 py-2 font-semibold text-white bg-green-500 rounded hover:bg-green-600 focus:outline-none"
+              disabled={loading}
             >
-              Verify OTP
+              {loading ? (
+                            <span className="flex items-center justify-center">
+                                <FontAwesomeIcon icon={faSpinner} spin className="mr-2" /> Verifying...
+                            </span>
+                        ) : 'Verify otp'}
             </button>
           </form>
         )}

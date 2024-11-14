@@ -25,7 +25,9 @@ const Login = () => {
         try {
             const response = await api.post('/api/auth/login', { email, password });
             localStorage.setItem('email', email);
-            localStorage.setItem('firstName', response.data.firstName);
+        localStorage.setItem('firstName', response.data.firstName);
+        localStorage.setItem('lastName', response.data.lastName); // Assuming the response includes lastName
+        localStorage.setItem('phone', response.data.phone);
 
             if (response.data.redirect) {
                 const userCheckResponse = await api.get(`/api/auth/check-user/${email}`);

@@ -4,73 +4,79 @@ const Borrower = require('../models/Borrower');
 const cloudinary = require('../utils/cloudinaryConfig');
 const multer = require('multer');
 const { Readable } = require('stream');
-const { sendBorrowerStatusEmail } = require('../utils/emailService');
 const User = require('../models/User');
 
 // Configure Multer for memory storage
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-// POST route to create a new borrower with file uploads
-router.post('/', upload.fields([{ name: 'aadharCard', maxCount: 1 }, { name: 'panCard', maxCount: 1 }, { name: 'accountStatement', maxCount: 1 }]), async (req, res) => {
-    try {
-        const uploadedFiles = {
-            aadharCard: [],
-            panCard: [],
-            accountStatement: []
-        };
+// Middleware to check if user is authenticated
+function isAuthenticated(req, res, next) {
+    if (req.session && req.session.user) {
+        return next();
+    } else {
+        return res.status(401).json({ message: "Unauthorized: Please log in" });
+    }
+}
 
-        // Upload each file to Cloudinary
-        for (const field of ['aadharCard', 'panCard', 'accountStatement']) {
-            if (req.files[field]) {
-                for (const file of req.files[field]) {
-                    const stream = Readable.from(file.buffer); // Convert buffer to stream
-                    const result = await new Promise((resolve, reject) => {
-                        const uploadStream = cloudinary.uploader.upload_stream(
-                            { folder: 'pfi' },
-                            (error, result) => {
-                                if (error) return reject(error);
-                                resolve(result);
-                            }
-                        );
-                        stream.pipe(uploadStream);
-                    });
-                    uploadedFiles[field].push(result.secure_url);
+// POST route to create a new borrower with file uploads
+router.post(
+    '/',
+    isAuthenticated,
+    upload.fields([{ name: 'aadharCard', maxCount: 1 }, { name: 'panCard', maxCount: 1 }, { name: 'accountStatement', maxCount: 1 }]),
+    async (req, res) => {
+        try {
+            const uploadedFiles = {
+                aadharCard: [],
+                panCard: [],
+                accountStatement: []
+            };
+
+            // Upload each file to Cloudinary
+            for (const field of ['aadharCard', 'panCard', 'accountStatement']) {
+                if (req.files[field]) {
+                    for (const file of req.files[field]) {
+                        const stream = Readable.from(file.buffer); // Convert buffer to stream
+                        const result = await new Promise((resolve, reject) => {
+                            const uploadStream = cloudinary.uploader.upload_stream(
+                                { folder: 'pfi' },
+                                (error, result) => {
+                                    if (error) return reject(error);
+                                    resolve(result);
+                                }
+                            );
+                            stream.pipe(uploadStream);
+                        });
+                        uploadedFiles[field].push(result.secure_url);
+                    }
                 }
             }
+
+            // Create a new borrower entry in the database
+            const newBorrower = new Borrower({
+                userID: req.session.user.id,
+                aadharCard: uploadedFiles.aadharCard,
+                panCard: uploadedFiles.panCard,
+                accountStatement: uploadedFiles.accountStatement,
+                gender: req.body.gender,
+                dateOfBirth: req.body.dateOfBirth,
+                gstNumber: req.body.gstNumber,
+                typeOfBusiness: req.body.typeOfBusiness
+            });
+
+            await newBorrower.save();
+            res.status(201).json({ message: 'Borrower created successfully', borrower: newBorrower });
+        } catch (error) {
+            console.error('Error creating borrower:', error);
+            res.status(400).json({ message: 'Error creating borrower', error });
         }
-
-        // get the user for reference
-        const user = await User.findOne({ email: req.body.email });
-
-        // Create a new borrower entry in the database
-        const newBorrower = new Borrower({
-            // firstName: req.body.firstName || localStorage.getItem('firstName'),
-            userID: user._id,
-            aadharCard: uploadedFiles.aadharCard,
-            panCard: uploadedFiles.panCard,
-            accountStatement: uploadedFiles.accountStatement,
-            gender: req.body.gender,
-            dateOfBirth: req.body.dateOfBirth,
-            gstNumber: req.body.gstNumber,
-            typeOfBusiness: req.body.typeOfBusiness,
-            // email: req.body.email
-        });
-
-        await newBorrower.save();
-        res.status(201).json({ message: 'Borrower created successfully', borrower: newBorrower });
-    } catch (error) {
-        console.error('Error creating borrower:', error);
-        res.status(400).json({ message: 'Error creating borrower', error });
     }
-});
+);
 
 // Route to check borrower status
-router.get('/status', async (req, res) => {
-    const { email } = req.query;
-    const user = await User.findOne({ email });
+router.get('/status', isAuthenticated, async (req, res) => {
     try {
-        const borrower = await Borrower.findOne({ userID: user._id });
+        const borrower = await Borrower.findOne({ userID: req.session.user.id });
         if (borrower) {
             return res.status(200).json({ exists: true, verified: borrower.verified });
         }
@@ -87,12 +93,12 @@ router.get('/all', async (req, res) => {
         const borrowers = await Borrower.find();
         const users = await User.find();
         const borrowerWithUserDetails = borrowers.map(borrower => {
-        const user = users.find(user => user._id.equals(borrower.userID));
-        return {
-            ...borrower.toObject(),
-            firstName: user ? user.firstName : '---',
-            email: user ? user.email : '---'
-        };
+            const user = users.find(user => user._id.equals(borrower.userID));
+            return {
+                ...borrower.toObject(),
+                firstName: user ? user.firstName : '---',
+                email: user ? user.email : '---'
+            };
         });
         res.status(200).json(borrowerWithUserDetails);
     } catch (error) {
@@ -101,17 +107,54 @@ router.get('/all', async (req, res) => {
     }
 });
 
+// Update borrower status
 router.put('/update', async (req, res) => {
-    const {id, stat, email, firstName} = req.body;
-    //console.log(id);
-    //console.log(stat);
-    const borrower = await Borrower.findByIdAndUpdate(id, { $set: { verified: Number(stat) } }, { new: true });
-    if (!borrower) {
-        return res.status(400).json({ message: "Error during update" });
+    const { id, stat } = req.body;
+
+    try {
+        const borrower = await Borrower.findByIdAndUpdate(id, { verified: Number(stat) }, { new: true });
+        if (!borrower) {
+            return res.status(400).json({ message: 'Error during update' });
+        }
+
+        const user = await User.findById(borrower.userID);
+        await sendBorrowerStatusEmail(user.email, user.firstName, stat);
+
+        res.status(200).json({ message: 'Status updated successfully!' });
+    } catch (error) {
+        console.error('Error updating borrower status:', error);
+        res.status(500).json({ message: 'Error updating borrower status', error: error.message });
     }
-    const user = await User.findById(borrower.userID);
-    await sendBorrowerStatusEmail(user.email, user.firstName, stat);
-    return res.status(200).json({message: "All set!"});
-  });
+});
+
+// Route to get user profile and borrower details
+router.get('/profile', isAuthenticated, async (req, res) => {
+    try {
+        const user = await User.findById(req.session.user.id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const borrower = await Borrower.findOne({ userID: user._id });
+        if (!borrower) {
+            return res.status(404).json({ message: 'Borrower profile not found' });
+        }
+
+        console.log(borrower);
+
+        const userInfo = {
+            firstName: user.firstName,
+            lastName: user.lastName,
+            phone: user.phone,
+            email: user.email,
+            borrowerId: borrower.borrowerId
+        };
+
+        return res.status(200).json(userInfo);
+    } catch (error) {
+        console.error('Error fetching user profile:', error);
+        return res.status(500).json({ message: 'Error fetching user profile', error: error.message });
+    }
+});
 
 module.exports = router;
