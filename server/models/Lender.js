@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 
 const generateLenderId = () => {
-    return Math.random().toString(36).substring(2, 8).toUpperCase(); // Generates a 6-character alphanumeric string
+    return Math.random().toString(36).substring(2, 12).toUpperCase(); // Generates a 10-character alphanumeric string
 };
 
 const lenderSchema = new mongoose.Schema({
