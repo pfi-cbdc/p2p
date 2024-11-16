@@ -43,7 +43,6 @@ const Invoices = () => {
                                 <td className="border px-3 py-2">{invoice.tenureOfInvoice}</td>
                                 <td className="border px-3 py-2">{invoice.interestRate}</td>
                                 <td className="border px-3 py-2">{invoice.verified === 1 ? 'Accepted' : invoice.verified === 2 ? 'Rejected' : 'Pending'}</td>
-                                <td className="border px-3 py-2 text-blue-500 text-underline">Pay Now</td>
                             </tr>
                         ))}
                     </tbody>

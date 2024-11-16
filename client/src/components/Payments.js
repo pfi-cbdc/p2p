@@ -29,11 +29,12 @@ const Payments = () => {
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <table>
+        <table className="min-w-full bg-white border border-gray-300">
           <thead>
             <tr>
               <th>Amount</th>
               <th>Payment ID</th>
+              <th>Approved</th>
             </tr>
           </thead>
           <tbody>
@@ -41,6 +42,7 @@ const Payments = () => {
               <tr key={payment._id}>
                 <td>Rs. {payment.amount}</td>
                 <td>{payment.razorpay_payment_id}</td>
+                <td>{payment.approved ? 'Accepted' : 'Not approved yet'}</td>
               </tr>
             ))}
           </tbody>

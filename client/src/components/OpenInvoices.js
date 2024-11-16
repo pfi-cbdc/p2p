@@ -42,7 +42,7 @@ const OpenInvoices = () => {
                     </thead>
                     <tbody>
                         {response.invoices
-                            .filter((invoice) => invoice.verified === 1)
+                            .filter((invoice) => invoice.verified === 1 && invoice.closed === false)
                             .map((invoice) => (
                                 <tr key={invoice._id}>
                                     <td className="border px-4 py-2">{invoice.firstName}</td>
