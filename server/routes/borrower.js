@@ -5,6 +5,7 @@ const cloudinary = require('../utils/cloudinaryConfig');
 const multer = require('multer');
 const { Readable } = require('stream');
 const User = require('../models/User');
+const { sendBorrowerStatusEmail } = require('../utils/emailService');
 
 // Configure Multer for memory storage
 const storage = multer.memoryStorage();
