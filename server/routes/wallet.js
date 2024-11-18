@@ -2,9 +2,12 @@ const express = require('express');
 const router = express.Router();
 const LenderWallet = require('../models/LenderWallet');
 const BorrowerWallet = require('../models/BorrowerWallet');
+const User = require('../models/User');
+const Lender = require('../models/Lender');
+const Borrower = require('../models/Borrower');
 
 router.post('/transfer', async (req, res) => {
-    const { lenderId, borrowerId, amount } = req.body;
+    const { email, borrowerId, amount } = req.body;
 
     if (!amount || amount <= 0) {
         return res.status(400).json({ message: 'Invalid amount' });
@@ -14,9 +17,13 @@ router.post('/transfer', async (req, res) => {
     session.startTransaction();
 
     try {
-        const lenderWallet = await LenderWallet.findOne({ userID: lenderId }).session(session);
-        const borrowerWallet = await BorrowerWallet.findOne({ userID: borrowerId }).session(session);
-
+        const user = await User.findOne({ email }).session(session); // Find user by email
+        const lender = await Lender.findOne({ userID: user._id }).session(session); // Find lender by user ID
+        let lenderWallet;
+        if(lender) {
+            lenderWallet = await LenderWallet.findOne({ lenderID: lender._id }).session(session); // Find lender wallet by lender ID
+        }
+        const borrowerWallet = await BorrowerWallet.findOne({ borrowerID: borrowerId }).session(session); // Find borrower wallet by borrower ID
         if (!lenderWallet || !borrowerWallet) {
             throw new Error('Wallet not found');
         }
@@ -42,9 +49,11 @@ router.post('/transfer', async (req, res) => {
 });
 
 
-router.get('/lender/:id', async (req, res) => {
+router.get('/lender/:email', async (req, res) => {
     try {
-        const lenderWallet = await LenderWallet.findOne({ userID: req.params.id });
+        const user = await User.findOne({ email: req.params.email });
+        const lender = await Lender.findOne({ userID: user._id });
+        const lenderWallet = await LenderWallet.findOne({ lenderID: lender._id });
         if (!lenderWallet) {
             return res.status(404).json({ message: 'Lender wallet not found' });
         }
@@ -58,9 +67,11 @@ router.get('/lender/:id', async (req, res) => {
     }
 });
 
-router.get('/borrower/:id', async (req, res) => {
+router.get('/borrower/:email', async (req, res) => {
     try {
-        const borrowerWallet = await BorrowerWallet.findOne({ userID: req.params.id });
+        const user = await User.findOne({ email: req.params.email });
+        const borrower = await Borrower.findOne({ userID: user._id });
+        const  borrowerWallet = await BorrowerWallet.findOne({ borrowerID: borrower._id });
         if (!borrowerWallet) {
             return res.status(404).json({ message: 'Borrower wallet not found' });
         }

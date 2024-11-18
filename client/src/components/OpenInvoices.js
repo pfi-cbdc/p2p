@@ -30,15 +30,14 @@ const OpenInvoices = () => {
                 alert('Lender not found. Please check your account.');
                 return;
             }
-            const lenderId = lenderResponse.data.lenderID; // Assuming the response contains lenderID
 
             // Log the IDs for debugging
-            console.log('Lender ID:', lenderId);
+            console.log('Email', email);
             console.log('Borrower ID:', borrowerId);
             console.log('Amount:', amount);
 
             const res = await api.post('/api/wallet/transfer', {
-                lenderId,
+                email,
                 borrowerId,
                 amount: Number(amount) // Custom amount entered
             });

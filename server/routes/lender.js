@@ -67,7 +67,7 @@ router.post(
       await newLender.save();
 
       const lenderWallet = new LenderWallet({
-        userID: newLender._id, // Link wallet to the lender
+        lenderID: newLender._id, // Link wallet to the lender
         balance: 500 // Initial balance
       });
 

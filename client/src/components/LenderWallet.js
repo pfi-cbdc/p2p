@@ -11,8 +11,7 @@ const LenderWallet = () => {
                 const email = localStorage.getItem('email'); 
                 const response = await api.get(`/api/lender/status?email=${email}`);
                 if (response.data.exists) {
-                    const lenderId = response.data.lenderID;
-                    const walletResponse = await api.get(`/api/wallet/lender/${lenderId}`);
+                    const walletResponse = await api.get(`/api/wallet/lender/${email}`);
                     setBalance(walletResponse.data.balance);
                     setTransactions(walletResponse.data.transactions);
                 } else {

@@ -11,8 +11,7 @@ const BorrowerWallet = () => {
                 const email = localStorage.getItem('email'); 
                 const response = await api.get(`/api/borrower/status?email=${email}`);
                 if (response.data.exists) {
-                    const borrowerId = response.data.borrowerID; 
-                    const walletResponse = await api.get(`/api/wallet/borrower/${borrowerId}`);
+                    const walletResponse = await api.get(`/api/wallet/borrower/${email}`);
                     setBalance(walletResponse.data.balance);
                     setTransactions(walletResponse.data.transactions);
                 } else {

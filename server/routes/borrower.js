@@ -70,7 +70,7 @@ router.post(
 
             // Create a new wallet for the borrower
             const borrowerWallet = new BorrowerWallet({
-                userID: newBorrower._id, // Link wallet to the borrower
+                borrowerID: newBorrower._id, // Link wallet to the borrower
                 balance: 500 // Initial balance
             });
 

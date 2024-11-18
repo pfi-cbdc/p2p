@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const lenderWalletSchema = new mongoose.Schema({
-    userID: { type: mongoose.Schema.Types.ObjectId, ref: 'Lender', required: true },
+    lenderID: { type: mongoose.Schema.Types.ObjectId, ref: 'Lender', required: true },
     balance: { type: Number, default: 500 }, 
     transactions: [{ 
         amount: { type: Number, required: true },
