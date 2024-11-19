@@ -5,13 +5,19 @@ import Invoices from './Invoices';
 import api from '../api/axios';
 import BorrowerWallet from './BorrowerWallet';
 
+import ClosedInvoices from './ClosedInvoices';
+
 const BorrowerDashboard = () => {
     const firstName = localStorage.getItem('firstName');
     const [showInvoiceForm, setShowInvoiceForm] = useState(false);
     const [showInvoices, setShowInvoices] = useState(false);
     const [userDetails, setUserDetails] = useState(null);
     const [showUserDetails, setShowUserDetails] = useState(false);
+
     const [showWallet, setShowWallet] = useState(false);
+
+    const [showClosedInvoices, setShowClosedIncvoices] = useState(false);
+
 
     const handleProfileClick = async () => {
         const email = localStorage.getItem('email');
@@ -28,7 +34,11 @@ const BorrowerDashboard = () => {
             setShowUserDetails(true);
             setShowInvoiceForm(false);
             setShowInvoices(false);
+            setShowClosedIncvoices(false);
             setShowWallet(false);
+
+            setShowClosedIncvoices(false);
+
         } catch (error) {
             console.error('Error fetching profile:', error);
         }
@@ -49,7 +59,11 @@ const BorrowerDashboard = () => {
                             setShowInvoices(false);
                             setShowInvoiceForm(true);
                             setShowUserDetails(false);
+
                             setShowWallet(false);
+
+                            setShowClosedIncvoices(false);
+
                         }} className="bg-blue-500 m-2 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-300">
                             Upload invoice
                             </button>
@@ -70,10 +84,15 @@ const BorrowerDashboard = () => {
                             setShowInvoiceForm(false);
                             setShowInvoices(true);
                             setShowUserDetails(false);
+
                             setShowWallet(false);
+
+                            setShowClosedIncvoices(false);
+
                             }} className="bg-blue-500 m-2 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-300">
                                 My invoices
                                 </button>
+
 
                         <button className="bg-blue-500 m-2 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-300"
                                 onClick={() => {
@@ -85,14 +104,29 @@ const BorrowerDashboard = () => {
                             Wallet
                         </button>
 
-                            <div className='border-t-2 border-gray-400'></div>
+                        <button onClick={() => {
+                            setShowInvoiceForm(false);
+                            setShowInvoices(false);
+                            setShowUserDetails(false);
+                            setShowClosedIncvoices(true);
+                          setShowWallet(false);
+                            }} className="bg-blue-500 m-2 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-300">
+                                Closed Invoices
+                                </button>
+
+                         <button className="bg-blue-500 m-2 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-300">
+                            Wallet
+                            </button>
+
+
+                            {/* <div className='border-t-2 border-gray-400'></div>
 
                             <button className="bg-blue-500 m-2 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-300">
                             Dummy
                             </button>
                             <button className="bg-blue-500 m-2 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-300">
                             Dummy
-                            </button>
+                            </button> */}
                     </div>
 
                 {/* ye form ka area hai*/}
@@ -105,6 +139,12 @@ const BorrowerDashboard = () => {
                 <div >
                     {showInvoices && <div>
                       <Invoices />
+                    </div>}
+                </div>
+
+                <div>
+                    {showClosedInvoices && <div>
+                        <ClosedInvoices />
                     </div>}
                 </div>
 

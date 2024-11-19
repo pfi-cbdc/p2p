@@ -18,10 +18,23 @@ const paymentSchema = new mongoose.Schema({
     ref: 'Lender',
     required: true
   },
+  invoiceID: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Invoice',
+    required: true
+  },
   borrowerID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Borrower',
     required: true
+  },
+  amount : {
+    type: Number,
+    required: true
+  },
+  approved: {
+    type: Boolean,
+    default: false
   }
 });
 

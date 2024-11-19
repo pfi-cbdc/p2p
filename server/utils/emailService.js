@@ -27,6 +27,22 @@ const sendOtpToMail = async (email, otp) => {
     }
 };
 
+const sendBorrowerPaymentEmail = async (email, amount) => {
+    const subject = 'Payment Received';
+    const message = `Your account has been credited with ₹${amount}. Please goto the p-fi website to check the details.`;
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: subject,
+        text: message,
+    };
+    try{
+        await transporter.sendMail(mailOptions);
+    } catch(error){
+        console.error('Error sending payment email:', error.message);
+    }
+};
+
 const sendBorrowerStatusEmail = async (email, firstName, status) => {
     const subject = status === 1 
         ? 'Your Borrower Application has been Accepted' 
@@ -131,4 +147,5 @@ module.exports = {
     sendInvoiceStatusEmail,
     sendLenderStatusEmail,
     sendInvestmentStatusEmail,
+    sendBorrowerPaymentEmail
 };

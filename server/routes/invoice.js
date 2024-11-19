@@ -6,6 +6,8 @@ const multer = require('multer');
 const { Readable } = require('stream');
 const User = require('../models/User');
 const Borrower = require('../models/Borrower');
+const Payment = require('../models/Payment');
+const Lender = require('../models/Lender');
 const { sendInvoiceStatusEmail } = require('../utils/emailService');
 
 // Configure Multer to use memory storage
@@ -50,6 +52,29 @@ router.post('/', upload.single('fileUpload'), async (req, res) => {
     } catch (error) {
         console.error('Error creating invoice:', error);
         res.status(400).json({ message: 'Error creating invoice', error });
+    }
+});
+
+// Fetch all closed invoices for borrower dashboard
+router.get('/closed/:email', async (req, res) => {
+    try {
+        const user = await User.findOne({ email: req.params.email });
+        const borrower = await Borrower.findOne({ userID: user._id });
+        const invoices = await Invoice.find({ borrowerID: borrower._id, closed: true });
+        const response = await Promise.all(invoices.map(async (invoice) => {
+            const payments = await Payment.findOne({invoiceID: invoice._id});
+            const lender = await Lender.findById(payments.lenderID);
+            return {
+                ...invoice.toObject(),
+                amount: payments ? payments.amount : '---',
+                lenderID: lender ? lender.lenderId : '---',
+            };
+        }))
+        return res.status(200).json(response);
+
+    } catch (error) {
+        console.error('Error fetching invoices:', error);
+        res.status(400).json({ message: 'Error fetching invoices', error });
     }
 });
 
