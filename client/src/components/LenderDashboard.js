@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import Invest from './Invest';
 import OpenInvoices from './OpenInvoices';
-
 import api from '../api/axios';
-
 import Payments from './Payments';
+import LenderWallet from './LenderWallet';
 
 
 const LenderDashboard = () => {
@@ -14,8 +13,10 @@ const LenderDashboard = () => {
 
     const [userDetails, setUserDetails] = useState(null);
     const [showUserDetails, setShowUserDetails] = useState(false);
-    const [showGreeting, setShowGreeting] = useState(true); // State to toggle greeting visibility
+    const [showGreeting, setShowGreeting] = useState(true); 
     const [showPayemts, setShowPayemts] = useState(false);
+    const [showWallet, setShowWallet] = useState(false);
+
     const handleProfileClick = async () => {
         const email = localStorage.getItem('email');
         if (!email) {
@@ -32,6 +33,7 @@ const LenderDashboard = () => {
             setShowOpenInvoices(false);
             setShowUserDetails(true);
             setShowGreeting(false); // Hide greeting when profile is shown
+            setShowWallet(false);
         } catch (error) {
             console.error('Error fetching profile:', error);
         }
@@ -56,6 +58,7 @@ const LenderDashboard = () => {
                             setShowUserDetails(false);
                             setShowPayemts(false);
                             setShowGreeting(true);
+                            setShowWallet(false);
                         }} 
                         className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                     >
@@ -87,6 +90,7 @@ const LenderDashboard = () => {
                            setShowPayemts(false);
                             setShowUserDetails(false);
                             setShowGreeting(true);
+                            setShowWallet(false);
                         }} 
                         className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                     >
@@ -96,10 +100,18 @@ const LenderDashboard = () => {
                             setShowOpenInvoices(false);
                             setShowInvestmentForm(false);
                             setShowPayemts(true);
+                            setShowWallet(false);
                         }} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                             Your Payments
                       </button>
-                    <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                    <button onClick={() => {
+                        setShowOpenInvoices(false);
+                        setShowInvestmentForm(false);
+                        setShowPayemts(false);
+                        setShowUserDetails(false);
+                        setShowGreeting(false);
+                        setShowWallet(true);
+                    }} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                         Wallet
                     </button>
 
@@ -120,6 +132,7 @@ const LenderDashboard = () => {
                     {showOpenInvoices && <OpenInvoices />}
                     {showInvestmentForm && <Invest />}
                     {showPayemts && <Payments />}
+                    {showWallet && <LenderWallet />}
 
                     {/* New section to display user details */}
                     {showUserDetails && userDetails && (

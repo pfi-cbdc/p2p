@@ -19,6 +19,7 @@ const adminRoutes = require('./routes/adminRoute');
 const investmentRoutes = require('./routes/investment')
 const resetPassword = require('./routes/resetPassword')
 const paymentRoutes = require('./routes/paymentRoutes')
+const walletRoutes = require('./routes/wallet');
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -130,6 +131,9 @@ app.use('/api/invoices', invoiceRoutes);  // Invoice route
 
 // Password reset route
 app.use('/api/reset', resetPassword);
+
+// Use the wallet routes
+app.use('/api/wallet', walletRoutes);
 
 // Serve uploaded files statically (if needed)
 app.use("/uploads", express.static("uploads"));

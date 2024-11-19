@@ -19,6 +19,39 @@ const OpenInvoices = () => {
     useEffect(()=>{
         fetchInvoices();
     }, []);
+    const handlePayUsingWallet = async (invoice) => {
+        const email = localStorage.getItem('email');
+        const borrowerId = invoice.borrowerID; // Get the borrower ID from the invoice
+
+        try {
+            // Fetch lender details to get the lender ID
+            const lenderResponse = await api.get(`/api/lender/status?email=${email}`);
+            if (!lenderResponse.data.exists) {
+                alert('Lender not found. Please check your account.');
+                return;
+            }
+
+            // Log the IDs for debugging
+            console.log('Email', email);
+            console.log('Borrower ID:', borrowerId);
+            console.log('Amount:', amount);
+
+            const res = await api.post('/api/wallet/transfer', {
+                email,
+                borrowerId,
+                amount: Number(amount) // Custom amount entered
+            });
+
+            if (res.status === 200) {
+                alert('Payment successful!');
+            } else {
+                alert(res.data.message);
+            }
+        } catch (error) {
+            console.error('Error during wallet transaction:', error);
+            alert('Transaction failed. Please try again.');
+        }
+    };
     const renderInvoices = () => {
         if (!response?.invoices) return <p>No invoices available.</p>;
 
@@ -38,6 +71,7 @@ const OpenInvoices = () => {
                             <th className="border px-4 py-2">Status</th>
                             <th className="border px-4 py-2">Custom Amount</th>
                             <th className="border px-4 py-2">Pay Now!</th>
+                            <th className="border px-4 py-2">Pay using Wallet</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -135,6 +169,11 @@ const OpenInvoices = () => {
                                         setButtonDisabled(false);
                                         }} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" disabled={buttonDisabled}>
                                             Pay
+                                        </button>
+                                    </td>
+                                    <td className="border px-4 py-2">
+                                        <button onClick={() => handlePayUsingWallet(invoice)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" disabled={buttonDisabled}>
+                                            Pay using Wallet
                                         </button>
                                     </td>
                                 </tr>

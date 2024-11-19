@@ -8,6 +8,7 @@ const { Readable } = require('stream');
 const { sendLenderStatusEmail } = require('../utils/emailService');
 const User = require('../models/User');
 const Payment = require('../models/Payment');
+const LenderWallet = require('../models/LenderWallet'); // Import LenderWallet model
 
 // Configure multer to use memory storage
 const storage = multer.memoryStorage();
@@ -64,6 +65,13 @@ router.post(
       });
 
       await newLender.save();
+
+      const lenderWallet = new LenderWallet({
+        lenderID: newLender._id, // Link wallet to the lender
+        balance: 500 // Initial balance
+      });
+
+      await lenderWallet.save(); // Save the wallet
       res.status(201).json({ message: 'Lender created successfully', lender: newLender });
     } catch (error) {
       console.error('Error creating lender:', error);

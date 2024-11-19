@@ -7,6 +7,9 @@ const { Readable } = require('stream');
 const User = require('../models/User');
 const { sendBorrowerStatusEmail } = require('../utils/emailService');
 
+const BorrowerWallet = require('../models/BorrowerWallet'); 
+
+
 // Configure Multer for memory storage
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -66,6 +69,14 @@ router.post(
             });
 
             await newBorrower.save();
+
+            // Create a new wallet for the borrower
+            const borrowerWallet = new BorrowerWallet({
+                borrowerID: newBorrower._id, // Link wallet to the borrower
+                balance: 500 // Initial balance
+            });
+
+            await borrowerWallet.save(); // Save the wallet
             res.status(201).json({ message: 'Borrower created successfully', borrower: newBorrower });
         } catch (error) {
             console.error('Error creating borrower:', error);
@@ -141,7 +152,7 @@ router.get('/profile', isAuthenticated, async (req, res) => {
             return res.status(404).json({ message: 'Borrower profile not found' });
         }
 
-        console.log(borrower);
+        //console.log(borrower);
 
         const userInfo = {
             firstName: user.firstName,
