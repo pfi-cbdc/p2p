@@ -15,36 +15,43 @@ const FAQ = () => {
     };
 
     return (
-        <div className="max-w-5xl mx-auto px-4 md:px-0">
-            <h1 className="text-3xl font-bold text-blue-500 mb-8 text-center">Frequently Asked Questions</h1>
-            <div className="flex flex-col md:flex-row gap-8">
-                {/* FAQ Section */}
-                <div className="md:w-2/3 space-y-4">
+        <div className='h-[45vw] w-full pt-[2vw] bg-[#000000] text-white'>
+            <h1 className="text-[2.2vw] font-bold text-blue-500 mb-8 text-center">Frequently Asked Questions</h1>
+            <div className='flex'>
+            <div className="left h-[45vw] w-[60vw] ml-[3vw]">
+            <div className="md:w-[60vw] space-y-4">
                     {faqs.map((faq, index) => (
-                        <div key={index} className="border-b border-gray-300 pb-4">
+                        <div key={index} className="border-b border-gray-300 pb-4 pt-[3.2vw]">
                             <div 
                                 onClick={() => toggleFAQ(index)} 
                                 className="flex justify-between items-center cursor-pointer text-left"
                             >
-                                <h3 className="text-lg font-medium">{faq.question}</h3>
-                                <span className="text-xl">{activeIndex === index ? '-' : '+'}</span>
+                                <h3 className="text-[1.5vw] ">{faq.question}</h3>
+                                <span className="text-[2vw]">{activeIndex === index ? '-' : '+'}</span>
                             </div>
-                            {activeIndex === index && <p className="mt-2 text-gray-600">{faq.answer}</p>}
+                            {activeIndex === index && <p className="mt-2 text-[1.5vw] pt-[1vw] text-white">{faq.answer}</p>}
                         </div>
                     ))}
                 </div>
-
-                {/* Contact Section */}
-                <div className="md:w-1/3 bg-gray-100 p-6 rounded-lg text-left">
-                    <p className="text-lg font-medium mb-2">Want to learn more?</p>
-                    <p className="text-gray-700 mb-4">Connect with us now! Our support team will help you within 2 hours.</p>
+            </div>
+            <div className="right h-[45vw] w-[40vw]">
+            <div className="flex flex-col md:flex-row gap-8">
+                <div className="bg-[#000000] p-6 rounded-lg text-left ml-[3vw] mt-[3.5vw]">
+                    <p className="text-[2vw] font-semibold  mb-2">Want to learn <br /> more?</p>
+                    <p className="text-white font-smibold mb-4 text-[1.5vw] pt-[1.5vw]">Connect with us now! Our support team will help you within 2 hours.</p>
                     <div className="space-y-2">
-                        <button className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg shadow">WhatsApp Us</button>
-                        <button className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg shadow">Email Us</button>
+                        <div className="contact flex flex-col gap-[1vw] mt-[2vw] ">
+                        <button className="w-[13vw] h-[2.9vw] px-4 py-2 bg-blue-500 text-white text-[1vw] rounded-[1.5vw] font-bold shadow">WhatsApp Us</button>
+                        <button className="w-[13vw] h-[2.9vw] px-4 py-2 bg-blue-500 text-white text-[1vw] rounded-[1.5vw] font-bold shadow">Email Us</button>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
+            </div>
+            </div>     
         </div>
+
     );
 };
 
