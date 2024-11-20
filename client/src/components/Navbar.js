@@ -48,7 +48,7 @@ const Navbar = () => {
     const isLoggedIn = localStorage.getItem('firstName') !== null;
 
     return (
-        <nav className="bg-[#F9F9F9] px-4 shadow-md">
+        <nav className="bg-[#F3F4F6] px-4 shadow-md">
              <div className="container  flex justify-between items-center ">
                 <div className="flex ml-[12vw] items-center">
                     <Link to="/" className="text-[2.2vw] font-bold text-blue-600">PFI</Link>
@@ -94,6 +94,7 @@ const Navbar = () => {
                             <h1 className="elem text-[2vw] font-semibold mt-[2vw] w-[20vw] h-[5vw] border-b-2 border-white ">GROW YOUR MONEY</h1>
                             <h1 className="elem text-[2vw] font-semibold mt-[2vw] w-[20vw] h-[5.3vw] border-b-2 border-white ">GROW YOUR BUSINESS</h1>
                             <h1 className="elem text-[2vw] font-semibold mt-[2vw] w-[20vw] h-[5vw] border-b-2 border-white ">OUR SERVICES</h1>
+                            
                             <h1 className="elem text-[2vw] font-semibold mt-[2vw] w-[20vw] h-[5vw] border-b-2 border-white ">CONTACT US</h1>
                         </div> 
                     </div>
