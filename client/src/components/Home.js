@@ -30,9 +30,9 @@ const Home = () => {
             </div>
 
             {/* Footer Section */}
-            <div className="w-full ">
+            {/* <div className="w-full ">
                 <Footer />
-            </div>
+            </div> */}
         </div>
     );
 };

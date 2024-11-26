@@ -28,7 +28,7 @@ const HeroSection = () => {
                         <span className="text-blue-600">{words[currentWordIndex]}</span>
                     </h1>
                     <p className="text-[1.2vw] pt-[2vw] text-gray-700">
-                        Join 4,52,175+ active investors who generate up to <br /> 12% Per Annum.
+                        Join active investors who generate up to <br /> 12% with BorrowX.
                     </p>
                 </div>
             </div>
