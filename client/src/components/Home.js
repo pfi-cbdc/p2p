@@ -3,7 +3,7 @@ import React from 'react';
 import FAQ from './FAQ';
 // import PointImage from './Point_image';
 import Hero from './Hero';
-import Footer from './Footer';
+// import Footer from './Footer';
 import BorrowerFrame from './BorrowerFrame';
 import Funding from './Funding';
 
