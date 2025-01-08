@@ -133,6 +133,8 @@ paths:
   ## Authentication
   /api/auth/register:
     post:
+      tags:
+        - Authentication
       summary: Register a new user
       requestBody:
         required: true
@@ -148,6 +150,8 @@ paths:
 
   /api/auth/verify-otp:
     post:
+      tags:
+        - Authentication
       summary: Verify OTP for registration
       requestBody:
         required: true
@@ -168,6 +172,8 @@ paths:
 
   /api/auth/login:
     post:
+      tags:
+        - Authentication
       summary: Login user
       requestBody:
         required: true
@@ -188,6 +194,8 @@ paths:
 
   /api/auth/logout:
     post:
+      tags:
+        - Authentication
       summary: Logout user
       security:
         - cookieAuth: []
@@ -199,6 +207,8 @@ paths:
 
   /api/auth/check-user/{email}:
     get:
+      tags:
+        - Authentication
       summary: Check if user exists and their roles
       parameters:
         - in: path
@@ -212,10 +222,36 @@ paths:
         '500':
           description: Error checking user status
 
+
+   
+  /api/reset/reset-password:
+    post:
+      tags:
+        - Authentication
+      summary: Request password reset
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+      responses:
+        '200':
+          description: Password reset email sent
+        '400':
+          description: Error sending password reset email
+
+         
+
   # Lender Routes
   ## Lender
   /api/lender:
     post:
+      tags:
+        - Lender
       summary: Create new lender
       security:
         - cookieAuth: []
@@ -252,21 +288,21 @@ paths:
 
   /api/lender/status:
     get:
+      tags:
+        - Lender
       summary: Check lender status
-      parameters:
-        - in: query
-          name: email
-          required: true
-          schema:
-            type: string
       responses:
         '200':
           description: Lender status retrieved successfully
+        '404':
+          description: Lender not found
         '500':
           description: Error checking lender status
 
   /api/lender/all:
     get:
+      tags:
+        - Lender
       summary: Get all lenders
       security:
         - cookieAuth: []
@@ -280,10 +316,27 @@ paths:
                 items:
                   $ref: '#/components/schemas/Lender'
 
+  /api/lender/profile:
+    get:
+      tags:
+        - Lender
+      summary: Get lender profile
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Lender profile retrieved successfully
+        '404':
+          description: Lender profile not found
+        '500':
+          description: Error fetching lender profile
+
   # Borrower Routes
   ## Borrower
   /api/borrower:
     post:
+      tags:
+        - Borrower
       summary: Create new borrower
       security:
         - cookieAuth: []
@@ -320,6 +373,8 @@ paths:
 
   /api/borrower/status:
     get:
+      tags:
+        - Borrower
       summary: Check borrower status
       security:
         - cookieAuth: []
@@ -329,14 +384,47 @@ paths:
         '400':
           description: Error checking borrower status
 
+  /api/borrower/all:
+    get:
+      tags:
+        - Borrower
+      summary: Get all borrowers
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: List of all borrowers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Borrower'
+
+  /api/borrower/profile:
+    get:
+      tags:
+        - Borrower
+      summary: Get borrower profile
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Borrower profile retrieved successfully
+        '404':
+          description: Borrower profile not found
+        '500':
+          description: Error fetching borrower profile
+
   # Investment Routes
   ## Investment
   /api/investment:
     post:
+      tags:
+        - Investment
       summary: Create new investment
-      security:
-        - cookieAuth: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -358,6 +446,8 @@ paths:
 
   /api/investment/all:
     get:
+      tags:
+        - Investment
       summary: Get all investments
       security:
         - cookieAuth: []
@@ -371,11 +461,68 @@ paths:
                 items:
                   $ref: '#/components/schemas/Investment'
 
+  /api/investment/update:
+    put:
+      tags:
+        - Investment
+      summary: Update investment status
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                stat:
+                  type: number
+                email:
+                  type: string
+                firstName:
+                  type: string
+      responses:
+        '200':
+          description: Investment status updated successfully
+        '400':
+          description: Error during update
+
   # Invoice Routes
   ## Invoice
-  /api/invoice/all/{email}:
+  /api/invoice:
+    post:
+      tags:
+        - Invoice
+      summary: Upload invoice
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                fileUpload:
+                  type: string
+                  format: binary
+                typeOfBusiness:
+                  type: string
+                tenureOfInvoice:
+                  type: number
+                interestRate:
+                  type: number
+                email:
+                  type: string
+      responses:
+        '201':
+          description: Invoice submitted successfully
+        '400':
+          description: Error creating invoice
+
+  /api/invoice/closed/{email}:
     get:
-      summary: Get invoices by email
+      tags:
+        - Invoice
+      summary: Get closed invoices for borrower
       parameters:
         - in: path
           name: email
@@ -384,14 +531,96 @@ paths:
             type: string
       responses:
         '200':
-          description: List of invoices for the user
+          description: List of closed invoices for the borrower
         '400':
           description: Error fetching invoices
+
+  /api/invoice/all:
+    get:
+      tags:
+        - Invoice
+      summary: Get all invoices
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: List of all invoices
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Invoice'
+
+  /api/invoice/all/{email}:
+    get:
+      tags:
+        - Invoice
+      summary: Get all invoices for a specific borrower
+      parameters:
+        - in: path
+          name: email
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of invoices for the borrower
+        '400':
+          description: No invoices found
+
+  /api/invoice/update:
+    put:
+      tags:
+        - Invoice
+      summary: Update invoice status
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                stat:
+                  type: number
+      responses:
+        '200':
+          description: Invoice status updated successfully
+        '400':
+          description: Error during update
+
+  /api/invoice/check:
+    get:
+      tags:
+        - Invoice
+      summary: Check if an invoice exists for a borrower
+      parameters:
+        - in: query
+          name: email
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Invoice existence check
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  exists:
+                    type: boolean
+        '500':
+          description: Error checking invoice
 
   # Admin Routes
   ## Admin
   /api/admin/dashboard:
     post:
+      tags:
+        - Admin
       summary: Get admin dashboard details
       security:
         - cookieAuth: []
@@ -403,6 +632,8 @@ paths:
 
   /api/admin/verify-user:
     post:
+      tags:
+        - Admin
       summary: Verify if user is admin
       security:
         - cookieAuth: []
@@ -414,6 +645,8 @@ paths:
 
   /api/admin/getApprovedPayments:
     get:
+      tags:
+        - Admin
       summary: Get approved payments
       security:
         - cookieAuth: []
@@ -425,6 +658,8 @@ paths:
 
   /api/admin/getAllPayments:
     get:
+      tags:
+        - Admin
       summary: Get all payments
       security:
         - cookieAuth: []
@@ -438,6 +673,8 @@ paths:
   ## Payment
   /api/payment/checkout:
     post:
+      tags:
+        - Payment
       summary: Checkout for payment
       requestBody:
         required: true
@@ -455,6 +692,8 @@ paths:
 
   /api/payment/paymentverification:
     post:
+      tags:
+        - Payment
       summary: Verify payment
       requestBody:
         required: true
@@ -474,6 +713,8 @@ paths:
   ## Wallet
   /api/wallet/transfer:
     post:
+      tags:
+        - Wallet
       summary: Transfer amount from lender to borrower
       requestBody:
         required: true
@@ -498,6 +739,8 @@ paths:
 
   /api/wallet/lender/{email}:
     get:
+      tags:
+        - Wallet
       summary: Get lender wallet details
       parameters:
         - in: path
@@ -515,6 +758,8 @@ paths:
 
   /api/wallet/borrower/{email}:
     get:
+      tags:
+        - Wallet
       summary: Get borrower wallet details
       parameters:
         - in: path
@@ -530,57 +775,5 @@ paths:
         '500':
           description: Internal server error
 
-  # Password Reset Routes
-  ## Password Reset
-  /api/reset/reset-password:
-    post:
-      summary: Request password reset
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-      responses:
-        '200':
-          description: Password reset email sent
-        '400':
-          description: Error sending password reset email
-
-  /api/reset/check-token:
-    get:
-      summary: Check password reset token
-      parameters:
-        - in: query
-          name: token
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Token is valid
-        '400':
-          description: Invalid token
-
-  /api/reset/password-update:
-    post:
-      summary: Update password
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                token:
-                  type: string
-                newPassword:
-                  type: string
-      responses:
-        '200':
-          description: Password updated successfully
-        '400':
-          description: Error updating password
+  
+  
