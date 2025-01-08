@@ -45,6 +45,7 @@ exports.loginAdmin = async (req, res) => {
         req.session.tempAdmin = tempAdmin;
 
         sendOtpToMail(email, otp);
+        console.log(otp)
 
         return res.status(200).json({
             message: "Admin Logged in.",

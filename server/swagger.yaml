@@ -129,6 +129,8 @@ components:
           description: "0 - pending, 1 - accepted, 2 - rejected"
 
 paths:
+  # Authentication Routes
+  ## Authentication
   /api/auth/register:
     post:
       summary: Register a new user
@@ -210,6 +212,8 @@ paths:
         '500':
           description: Error checking user status
 
+  # Lender Routes
+  ## Lender
   /api/lender:
     post:
       summary: Create new lender
@@ -276,6 +280,8 @@ paths:
                 items:
                   $ref: '#/components/schemas/Lender'
 
+  # Borrower Routes
+  ## Borrower
   /api/borrower:
     post:
       summary: Create new borrower
@@ -312,6 +318,19 @@ paths:
         '400':
           description: Error creating borrower
 
+  /api/borrower/status:
+    get:
+      summary: Check borrower status
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Borrower status retrieved successfully
+        '400':
+          description: Error checking borrower status
+
+  # Investment Routes
+  ## Investment
   /api/investment:
     post:
       summary: Create new investment
@@ -352,6 +371,8 @@ paths:
                 items:
                   $ref: '#/components/schemas/Investment'
 
+  # Invoice Routes
+  ## Invoice
   /api/invoice/all/{email}:
     get:
       summary: Get invoices by email
@@ -367,6 +388,8 @@ paths:
         '400':
           description: Error fetching invoices
 
+  # Admin Routes
+  ## Admin
   /api/admin/dashboard:
     post:
       summary: Get admin dashboard details
@@ -388,3 +411,176 @@ paths:
           description: User verified as admin
         '400':
           description: Unauthorized access
+
+  /api/admin/getApprovedPayments:
+    get:
+      summary: Get approved payments
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Approved payments retrieved successfully
+        '400':
+          description: Error fetching approved payments
+
+  /api/admin/getAllPayments:
+    get:
+      summary: Get all payments
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: All payments retrieved successfully
+        '400':
+          description: Error fetching all payments
+
+  # Payment Routes
+  ## Payment
+  /api/payment/checkout:
+    post:
+      summary: Checkout for payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                // Define properties for checkout request
+      responses:
+        '200':
+          description: Checkout successful
+        '400':
+          description: Checkout failed
+
+  /api/payment/paymentverification:
+    post:
+      summary: Verify payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                // Define properties for payment verification
+      responses:
+        '200':
+          description: Payment verification successful
+        '400':
+          description: Payment verification failed
+
+  # Wallet Routes
+  ## Wallet
+  /api/wallet/transfer:
+    post:
+      summary: Transfer amount from lender to borrower
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                borrowerId:
+                  type: string
+                amount:
+                  type: number
+      responses:
+        '200':
+          description: Transaction successful
+        '400':
+          description: Invalid amount
+        '500':
+          description: Internal server error
+
+  /api/wallet/lender/{email}:
+    get:
+      summary: Get lender wallet details
+      parameters:
+        - in: path
+          name: email
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lender wallet details retrieved successfully
+        '404':
+          description: Lender wallet not found
+        '500':
+          description: Internal server error
+
+  /api/wallet/borrower/{email}:
+    get:
+      summary: Get borrower wallet details
+      parameters:
+        - in: path
+          name: email
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Borrower wallet details retrieved successfully
+        '404':
+          description: Borrower wallet not found
+        '500':
+          description: Internal server error
+
+  # Password Reset Routes
+  ## Password Reset
+  /api/reset/reset-password:
+    post:
+      summary: Request password reset
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+      responses:
+        '200':
+          description: Password reset email sent
+        '400':
+          description: Error sending password reset email
+
+  /api/reset/check-token:
+    get:
+      summary: Check password reset token
+      parameters:
+        - in: query
+          name: token
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Token is valid
+        '400':
+          description: Invalid token
+
+  /api/reset/password-update:
+    post:
+      summary: Update password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                newPassword:
+                  type: string
+      responses:
+        '200':
+          description: Password updated successfully
+        '400':
+          description: Error updating password
