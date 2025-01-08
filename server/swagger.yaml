@@ -7,7 +7,7 @@ info:
 servers:
   - url: http://localhost:5001
     description: Development server
-  - url: https://harmonious-treacle-f674f9.netlify.app
+  - url: https://pfi-dwxi.onrender.com/
     description: Production server
 
 components:
