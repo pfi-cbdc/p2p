@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: PFI API
-  description: API documentation for PFI application
+  description: API documentation for PFI application. P-fi is a web application designed to facilitate the management of invoices and investments for lenders and borrowers. It provides a user-friendly interface for uploading, viewing, and managing invoices, along with a wallet system for payments. The application supports role-based access for Admin, Lender, and Borrower, ensuring that each user can perform actions relevant to their role.
   version: 1.0.0
   
 servers:
